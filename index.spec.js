@@ -2,16 +2,20 @@
 const microcli = require('./index')
 
 describe('microcli', () => {
-  let callback
+  let callback, logger
 
   beforeEach(() => {
     callback = jest.fn()
+    logger = {
+      log: jest.fn()
+    }
   })
 
   describe('without annotations given', () => {
     it('executes callback with params and options', () => {
-      microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'])(callback)
+      microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], null, null, logger)(callback)
       expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+      expect(logger.log).not.toHaveBeenCalled()
     })
   })
 
@@ -24,6 +28,12 @@ describe('microcli', () => {
           params: ['abc', 'def'],
           options: ['a', 'foo']
         }
+      })
+
+      it('executes callback with params and options', () => {
+        microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
+        expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+        expect(logger.log).not.toHaveBeenCalled()
       })
     })
 
@@ -41,14 +51,35 @@ describe('microcli', () => {
         }
       })
 
+      it('executes callback with params and options', () => {
+        microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
+        expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+        expect(logger.log).not.toHaveBeenCalled()
+      })
+
       describe('and other extra', () => {
         beforeEach(() => {
           annotations['description'] = 'script description'
           annotations['examples'] = 'examples content'
         })
 
-        describe('with help formatting function', () => {
+        it('executes callback with params and options', () => {
+          microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
+          expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+          expect(logger.log).not.toHaveBeenCalled()
+        })
 
+        describe('with help formatting function', () => {
+          let help
+
+          beforeEach(() => {
+            help = () => {}
+          })
+          it('executes callback with params and options', () => {
+            microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, help, logger)(callback)
+            expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+            expect(logger.log).not.toHaveBeenCalled()
+          })
         })
       })
     })
