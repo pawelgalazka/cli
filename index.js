@@ -7,7 +7,11 @@ function optionsToString(optionsKeys) {
   }).join(' ')
 }
 
-module.exports = (argv, annotations = {}, help, logger = console) => {
+function printHelp(annotations) {
+
+}
+
+module.exports = (argv, annotations = {}, printHelp = printHelp, logger = console) => {
   const { params, options } = microargs(argv.slice(1))
   const scriptName = argv[0]
   const annotatedOptionsKeys = get(annotations, 'options') && Object.keys(annotations.options) || []
