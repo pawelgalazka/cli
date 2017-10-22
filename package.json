@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/pawelgalazka/microcli#readme",
   "dependencies": {
+    "lodash": "4.17.4",
     "microargs": "1.1.0"
   },
   "devDependencies": {

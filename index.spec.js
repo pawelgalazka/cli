@@ -22,22 +22,7 @@ describe('microcli', () => {
   describe('with annotations given', () => {
     let annotations
 
-    describe('about params and options without descriptions', () => {
-      beforeEach(() => {
-        annotations = {
-          params: ['abc', 'def'],
-          options: ['a', 'foo']
-        }
-      })
-
-      it('executes callback with params and options', () => {
-        microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
-        expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
-        expect(logger.log).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('about params and options with descriptions', () => {
+    describe('about params and options', () => {
       beforeEach(() => {
         annotations = {
           params: {
@@ -57,16 +42,17 @@ describe('microcli', () => {
         expect(logger.log).not.toHaveBeenCalled()
       })
 
+      it('throws error if option name is incorrect', () => {
+        expect(() => {
+          microcli(['scriptname', '--abc'], annotations, null, logger)(callback)
+        }).toThrow('Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information')
+        expect(callback).not.toHaveBeenCalled()
+      })
+
       describe('and other extra', () => {
         beforeEach(() => {
           annotations['description'] = 'script description'
           annotations['examples'] = 'examples content'
-        })
-
-        it('executes callback with params and options', () => {
-          microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
-          expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
-          expect(logger.log).not.toHaveBeenCalled()
         })
 
         describe('with help formatting function', () => {
