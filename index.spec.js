@@ -29,6 +29,7 @@ describe('microcli', () => {
 
     beforeEach(() => {
       annotations = {
+        description: 'General script description',
         params: {
           abc: 'description for abc param',
           def: 'description for def param'
@@ -44,6 +45,17 @@ describe('microcli', () => {
       microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
       expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
       expect(logger.log).not.toHaveBeenCalled()
+    })
+
+    it('prints basic help', () => {
+      microcli(['scriptname', '--help'], annotations, null, logger)(callback)
+      expect(logger.log.mock.calls).toEqual([
+        ['Usage: scriptname [options] [abc def]\n'],
+        ['General script description\n'],
+        ['Options:\n'],
+        ['  -a          description for a option'],
+        ['  --foo       description for foo option']
+      ])
     })
 
     it('throws error if option name is incorrect', () => {
