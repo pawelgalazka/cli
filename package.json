@@ -28,6 +28,9 @@
     "url": "https://github.com/pawelgalazka/microcli/issues"
   },
   "homepage": "https://github.com/pawelgalazka/microcli#readme",
+  "dependencies": {
+    "microargs": "1.1.0"
+  },
   "devDependencies": {
     "eslint": "4.9.0",
     "eslint-config-standard": "10.2.1",
