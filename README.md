@@ -55,3 +55,20 @@ Options:
     --foo      description for foo option
 ```
 
+You can provide `help` function to `cli` call, which can generate
+custom help message, having annotations object:
+
+```js
+#!/usr/bin/env node
+const microcli = require('microcli')
+const cli = microcli(process.argv);
+const annotations = {/* some annotations */}
+
+cli((options, p1, p2) => {
+    console.log('OPTIONS', options)
+    console.log('P1', p1)
+    console.log('P2', p2)
+}, annotations, (scriptName, annotations, logger) => {
+  logger.log('Custom --help message') 
+})
+```
