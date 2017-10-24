@@ -9,8 +9,9 @@ const cli = microcli(process.argv, {
   options: {
     a: 'description for a option',
     foo: 'description for foo option'
-  }
-});
+  },
+  examples: 'some examples'
+})
 
 cli((options, p1, p2) => {
   console.log('OPTIONS', options)
