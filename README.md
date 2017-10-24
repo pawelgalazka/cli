@@ -25,12 +25,7 @@ P2 def
 ```js
 #!/usr/bin/env node
 const microcli = require('microcli')
-const cli = microcli(process.argv);
-cli((options, p1, p2) => {
-    console.log('OPTIONS', options)
-    console.log('P1', p1)
-    console.log('P2', p2)
-}, {
+const cli = microcli(process.argv, {
   description: 'Basic script description',
   params: {
     p1: 'description for p1 param',
@@ -40,6 +35,12 @@ cli((options, p1, p2) => {
     a: 'description for a option',
     foo: 'description for foo option'
   }
+});
+
+cli((options, p1, p2) => {
+    console.log('OPTIONS', options)
+    console.log('P1', p1)
+    console.log('P2', p2)
 })
 ```
 
@@ -63,14 +64,15 @@ custom help message, having annotations object:
 ```js
 #!/usr/bin/env node
 const microcli = require('microcli')
-const cli = microcli(process.argv);
-const annotations = {/* some annotations */}
+const cli = microcli(process.argv, {
+  /* some annotations */
+}, (scriptName, annotations, logger) => {
+  logger.log('Custom --help message') 
+});
 
 cli((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
     console.log('P2', p2)
-}, annotations, (scriptName, annotations, logger) => {
-  logger.log('Custom --help message') 
 })
 ```
