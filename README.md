@@ -55,6 +55,8 @@ Options:
     --foo      description for foo option
 ```
 
+### Custom --help
+
 You can provide `help` function to `cli` call, which can generate
 custom help message, having annotations object:
 
