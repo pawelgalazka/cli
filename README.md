@@ -72,6 +72,10 @@ Available options: -a --foo
 Type "script.js --help" for more information
 ```
 
+Also each annotation is optional and custom annotations like `examples`
+(basically other than description, params and options) will be treated
+in `--help` content as additional header with string value.
+
 ### Custom --help
 
 You can provide `help` function to `cli` call, which can generate
