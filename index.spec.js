@@ -67,8 +67,20 @@ describe('microcli', () => {
 
     describe('and other extra', () => {
       beforeEach(() => {
-        annotations['description'] = 'script description'
         annotations['examples'] = 'examples content'
+      })
+
+      it('prints help with extra annotation', () => {
+        microcli(['scriptname', '--help'], annotations, null, logger)(callback)
+        expect(logger.log.mock.calls).toEqual([
+          ['Usage: scriptname [options] [abc def]\n'],
+          ['General script description\n'],
+          ['Options:\n'],
+          ['  -a          description for a option'],
+          ['  --foo       description for foo option'],
+          ['\nExamples:\n'],
+          ['examples content\n']
+        ])
       })
 
       describe('with help formatting function', () => {

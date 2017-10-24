@@ -1,5 +1,5 @@
 const microargs = require('microargs')
-const { get, difference, isEmpty, padEnd, forEach } = require('lodash')
+const { get, difference, isEmpty, padEnd, forEach, capitalize } = require('lodash')
 
 function optionToString (optionName) {
   return optionName.length === 1 ? `-${optionName}` : `--${optionName}`
@@ -13,9 +13,7 @@ function printHelp (scriptName, annotations, logger) {
   if (isEmpty(annotations)) {
     return null
   }
-  const params = annotations.params || {}
-  const options = annotations.options || {}
-  const description = annotations.description
+  const { description, params, options, ...extra } = annotations
   const usageOptions = isEmpty(options) ? '' : '[options]'
   const usageParams = isEmpty(params) ? '' : `[${Object.keys(params).join(' ')}]`
 
@@ -31,6 +29,11 @@ function printHelp (scriptName, annotations, logger) {
       logger.log(`  ${padEnd(optionToString(key), 12)}${value}`)
     })
   }
+
+  forEach(extra, (value, key) => {
+    logger.log(`\n${capitalize(key)}:\n`)
+    logger.log(`${value}\n`)
+  })
 }
 
 module.exports = (argv, annotations = {}, help, logger = console) => {
