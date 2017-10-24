@@ -1,3 +1,4 @@
+const path = require('path')
 const microargs = require('microargs')
 const { get, difference, isEmpty, padEnd, forEach, capitalize } = require('lodash')
 
@@ -17,7 +18,7 @@ function printHelp (scriptName, annotations, logger) {
   const usageOptions = isEmpty(options) ? '' : '[options]'
   const usageParams = isEmpty(params) ? '' : `[${Object.keys(params).join(' ')}]`
 
-  logger.log(`Usage: ${scriptName} ${usageOptions} ${usageParams}\n`)
+  logger.log(`Usage: ${path.basename(scriptName)} ${usageOptions} ${usageParams}\n`)
 
   if (description) {
     logger.log(`${description}\n`)

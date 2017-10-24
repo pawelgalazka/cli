@@ -48,7 +48,7 @@ describe('microcli', () => {
     })
 
     it('prints basic help', () => {
-      microcli(['scriptname', '--help'], annotations, null, logger)(callback)
+      microcli(['path/scriptname', '--help'], annotations, null, logger)(callback)
       expect(logger.log.mock.calls).toEqual([
         ['Usage: scriptname [options] [abc def]\n'],
         ['General script description\n'],
@@ -71,7 +71,7 @@ describe('microcli', () => {
       })
 
       it('prints help with extra annotation', () => {
-        microcli(['scriptname', '--help'], annotations, null, logger)(callback)
+        microcli(['path/scriptname', '--help'], annotations, null, logger)(callback)
         expect(logger.log.mock.calls).toEqual([
           ['Usage: scriptname [options] [abc def]\n'],
           ['General script description\n'],
