@@ -87,12 +87,19 @@ describe('microcli', () => {
         let help
 
         beforeEach(() => {
-          help = () => {}
+          help = jest.fn()
         })
+
         it('executes callback with params and options', () => {
           microcli(['scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, help, logger)(callback)
           expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
           expect(logger.log).not.toHaveBeenCalled()
+        })
+
+        it('calls provided help function to handle annotations', () => {
+          microcli(['scriptname', '--help'], annotations, help, logger)(callback)
+          expect(help).toHaveBeenCalledWith('scriptname', annotations, logger)
+          expect(help).toHaveBeenCalledTimes(1)
         })
       })
     })
