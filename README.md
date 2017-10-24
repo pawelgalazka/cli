@@ -56,6 +56,17 @@ Options:
     --foo      description for foo option
 ```
 
+Annotations plays part also in validating process. So if
+option which does not exist in annotations is provided, `microcli` will
+throw an error:
+
+```
+$ script.js --bar
+Illegal option: --bar
+Available options: -a --foo
+Type "script.js --help" for more information
+```
+
 ### Custom --help
 
 You can provide `help` function to `cli` call, which can generate
