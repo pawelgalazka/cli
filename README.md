@@ -1,9 +1,10 @@
 # microcli ![node version](https://img.shields.io/node/v/microcli.svg) [![Build Status](https://travis-ci.org/pawelgalazka/microcli.svg?branch=master)](https://travis-ci.org/pawelgalazka/microcli) [![npm version](https://badge.fury.io/js/microcli.svg)](https://badge.fury.io/js/microcli)
 CLI scripts micro engine
 
-``` js
+```js
 #!/usr/bin/env node
-const cli = require('microcli')(process.argv);
+const microcli = require('microcli')
+const cli = microcli(process.argv);
 cli((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
@@ -16,3 +17,41 @@ $ script.js -a --foo=bar --boo abc def
 OPTIONS {a: true, foo: 'bar', boo: true }
 P1 abc
 P2 def
+
+```
+
+### Annotations
+
+```js
+#!/usr/bin/env node
+const microcli = require('microcli')
+const cli = microcli(process.argv);
+cli((options, p1, p2) => {
+    console.log('OPTIONS', options)
+    console.log('P1', p1)
+    console.log('P2', p2)
+}, {
+  description: 'Basic script description',
+  params: {
+    p1: 'description for p1 param',
+    p2: 'description for p2 param'
+  },
+  options: {
+    a: 'description for a option',
+    foo: 'description for foo option'
+  }
+})
+```
+
+```
+$ script.js --help
+Usage: script.js [options] [p1 p2]
+
+Basic script description
+
+Options:
+
+    -a         description for a option
+    --foo      description for foo option
+```
+
