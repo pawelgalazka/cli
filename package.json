@@ -6,7 +6,8 @@
   "scripts": {
     "test": "yarn run test:lint && yarn run test:unit",
     "test:lint": "eslint *.js",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "precommit": "yarn run test:lint"
   },
   "engines": {
     "node": ">=6.11.1"
@@ -42,6 +43,7 @@
     "eslint-plugin-node": "5.2.0",
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-standard": "3.0.1",
+    "husky": "^0.14.3",
     "jest": "21.2.1"
   },
   "jest": {
