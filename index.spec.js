@@ -60,7 +60,7 @@ describe('microcli', () => {
 
     it('throws error if option name is incorrect', () => {
       expect(() => {
-        microcli(['scriptname', '--abc'], annotations, null, logger)(callback)
+        microcli(['scriptname', '--abc'], annotations, null, logger)
       }).toThrow('Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information')
       expect(callback).not.toHaveBeenCalled()
     })

@@ -45,16 +45,16 @@ module.exports = (argv, annotations = {}, help, logger = console) => {
   const optionsKeys = Object.keys(options)
   const illegalOptionsKeys = difference(optionsKeys, annotatedOptionsKeys)
 
+  if (!options.help && annotatedOptionsKeys.length && illegalOptionsKeys.length) {
+    const errorMessage = `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
+      `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
+      `Type "${scriptName} --help" for more information`
+    throw new Error(errorMessage)
+  }
+
   return (callback) => {
     if (options.help) {
       return help(scriptName, annotations, logger)
-    }
-
-    if (annotatedOptionsKeys.length && illegalOptionsKeys.length) {
-      const errorMessage = `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
-        `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
-        `Type "${scriptName} --help" for more information`
-      throw new Error(errorMessage)
     }
 
     return callback(options, ...params)
