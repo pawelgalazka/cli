@@ -33,6 +33,9 @@
     "microargs": "1.1.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "eslint": "4.9.0",
     "eslint-config-standard": "10.2.1",
     "eslint-plugin-import": "2.8.0",
@@ -40,5 +43,8 @@
     "eslint-plugin-promise": "3.6.0",
     "eslint-plugin-standard": "3.0.1",
     "jest": "21.2.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
