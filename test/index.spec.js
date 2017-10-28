@@ -30,10 +30,7 @@ describe('microcli', () => {
     beforeEach(() => {
       annotations = {
         description: 'General script description',
-        params: {
-          abc: 'description for abc param',
-          def: 'description for def param'
-        },
+        params: ['abc', 'def'],
         options: {
           a: 'description for a option',
           foo: 'description for foo option'

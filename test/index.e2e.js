@@ -2,10 +2,7 @@
 const microcli = require('../index')
 const cli = microcli(process.argv, {
   description: 'Basic script description',
-  params: {
-    p1: 'description for p1 param',
-    p2: 'description for p2 param'
-  },
+  params: ['p1', 'p2'],
   options: {
     a: 'description for a option',
     foo: 'description for foo option'

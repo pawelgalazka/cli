@@ -18,7 +18,7 @@ function printHelp (scriptName, annotations, logger) {
   const { description, params, options } = annotations
   const extra = omit(annotations, ['description', 'params', 'options'])
   const usageOptions = isEmpty(options) ? '' : '[options]'
-  const usageParams = isEmpty(params) ? '' : `[${Object.keys(params).join(' ')}]`
+  const usageParams = isEmpty(params) ? '' : `[${params.join(' ')}]`
 
   logger.log(`Usage: ${path.basename(scriptName)} ${usageOptions} ${usageParams}\n`)
 
