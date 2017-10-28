@@ -41,8 +41,8 @@ function printHelp (scriptName, annotations, logger) {
 
 module.exports = (argv, annotations = {}, help, logger = console) => {
   help = help || printHelp
-  const { params, options } = microargs(argv.slice(1))
-  const scriptName = argv[0]
+  const { params, options } = microargs(argv.slice(2))
+  const scriptName = path.basename(argv[1])
   const annotatedOptionsKeys = (get(annotations, 'options') && Object.keys(annotations.options)) || []
   const optionsKeys = Object.keys(options)
   const illegalOptionsKeys = difference(optionsKeys, annotatedOptionsKeys)

@@ -4,10 +4,10 @@
   "description": "CLI scripts micro engine",
   "main": "index.js",
   "scripts": {
-    "test": "yarn run test:lint && yarn run test:unit",
+    "test": "yarn run test:lint && yarn run test:unit && yarn run test:e2e",
     "test:lint": "eslint *.js",
     "test:unit": "jest",
-    "test:e2e": "./test/index.e2e.js -a --foo=bar --boo abc def",
+    "test:e2e": "./test/index.e2e.js -a --foo=bar abc def",
     "precommit": "yarn run test:lint"
   },
   "engines": {
