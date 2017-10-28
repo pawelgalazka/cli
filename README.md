@@ -74,6 +74,22 @@ Also each annotation is optional and custom annotations like `examples`
 in `--help` content as additional header with string value.
 
 ### Commands
+```
+$ script.js status --foo abc 
+OPTIONS {foo: true}
+P abc
+
+$ script.js branch --help
+Usage: branch [options] [p]
+
+Basic script description
+
+$ script.js --foo abc
+OPTIONS {foo: true}
+P abc
+
+```
+
 ```js
 #!/usr/bin/env node
 const microcli = require('microcli')
@@ -120,23 +136,6 @@ main((options, p) => {
   console.log('P', p)
 })
 ```
-
-```
-$ script.js status --foo abc 
-OPTIONS {foo: true}
-P abc
-
-$ script.js branch --help
-Usage: branch [options] [p]
-
-Basic script description
-
-$ script.js --foo abc
-OPTIONS {foo: true}
-P abc
-
-```
-
 
 ### Custom --help
 
