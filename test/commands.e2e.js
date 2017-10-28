@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const microcli = require('../index')
-const command = name => name === process.argv[2]
 
 const main = microcli(process.argv, {
   description: 'base command',
@@ -26,17 +25,24 @@ const branch = microcli(process.argv.slice(1), {
   }
 })
 
-command('status') && status((options, p) => {
-  console.log('OPTIONS', options)
-  console.log('P', p)
-})
+switch (process.argv[2]) {
+  case 'status':
+    status((options, p) => {
+      console.log('OPTIONS', options)
+      console.log('P', p)
+    })
+    break
 
-command('branch') && branch((options, p) => {
-  console.log('OPTIONS', options)
-  console.log('P', p)
-})
+  case 'branch':
+    branch((options, p) => {
+      console.log('OPTIONS', options)
+      console.log('P', p)
+    })
+    break
 
-main((options, p) => {
-  console.log('OPTIONS', options)
-  console.log('P', p)
-})
+  default:
+    main((options, p) => {
+      console.log('OPTIONS', options)
+      console.log('P', p)
+    })
+}
