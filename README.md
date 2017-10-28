@@ -109,7 +109,7 @@ const status = microcli(process.argv.slice(1), {
   options: {
     foo: 'foo option'
   }
-});
+})
 
 const branch = microcli(process.argv.slice(1), {
   description: 'Fake git branch',
@@ -117,18 +117,16 @@ const branch = microcli(process.argv.slice(1), {
   options: {
     foo: 'foo option'
   }
-});
+})
 
 command('status') && status((options, p) => {
   console.log('OPTIONS', options)
   console.log('P', p)
-  process.exit(0)
 })
 
 command('branch') && branch((options, p) => {
   console.log('OPTIONS', options)
   console.log('P', p)
-  process.exit(0)
 })
 
 main((options, p) => {
