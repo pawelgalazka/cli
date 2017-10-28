@@ -27,10 +27,7 @@ P2 def
 const microcli = require('microcli')
 const cli = microcli(process.argv, {
   description: 'Basic script description',
-  params: {
-    p1: 'description for p1 param',
-    p2: 'description for p2 param'
-  },
+  params: ['p1', 'p2'],
   options: {
     a: 'description for a option',
     foo: 'description for foo option'
@@ -75,6 +72,71 @@ Type "script.js --help" for more information
 Also each annotation is optional and custom annotations like `examples`
 (basically other than description, params and options) will be treated
 in `--help` content as additional header with string value.
+
+### Commands
+```js
+#!/usr/bin/env node
+const microcli = require('microcli')
+const command = name=> name === process.argv[2]
+
+const main = microcli(process.argv, {
+  description: 'base command',
+  params: ['p'],
+  options: {
+    foo: 'foo option'
+  }
+})
+
+const status = microcli(process.argv.slice(1), {
+  description: 'Fake git status',
+  params: ['p'],
+  options: {
+    foo: 'foo option'
+  }
+});
+
+const branch = microcli(process.argv.slice(1), {
+  description: 'Fake git branch',
+  params: ['p'],
+  options: {
+    foo: 'foo option'
+  }
+});
+
+command('status') && status((options, p) => {
+  console.log('OPTIONS', options)
+  console.log('P', p)
+  process.exit(0)
+})
+
+command('branch') && branch((options, p) => {
+  console.log('OPTIONS', options)
+  console.log('P', p)
+  process.exit(0)
+})
+
+main((options, p) => {
+  console.log('OPTIONS', options)
+  console.log('P', p)
+})
+```
+
+```
+$ script.js status --foo abc 
+OPTIONS {foo: true}
+P abc
+
+$ script.js branch --help
+Usage: branch [options] [p]
+
+Basic script description
+
+$ script.js --foo abc
+OPTIONS {foo: true}
+P abc
+
+```
+
 
 ### Custom --help
 
