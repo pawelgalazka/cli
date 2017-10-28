@@ -1,6 +1,6 @@
 const path = require('path')
 const microargs = require('microargs')
-const { get, difference, isEmpty, padEnd, forEach, capitalize } = require('lodash')
+const { get, difference, isEmpty, padEnd, forEach, capitalize, omit } = require('lodash')
 
 function optionToString (optionName) {
   return optionName.length === 1 ? `-${optionName}` : `--${optionName}`
@@ -14,7 +14,9 @@ function printHelp (scriptName, annotations, logger) {
   if (isEmpty(annotations)) {
     return null
   }
-  const { description, params, options, ...extra } = annotations
+
+  const { description, params, options } = annotations
+  const extra = omit(annotations, ['description', 'params', 'options'])
   const usageOptions = isEmpty(options) ? '' : '[options]'
   const usageParams = isEmpty(params) ? '' : `[${Object.keys(params).join(' ')}]`
 
