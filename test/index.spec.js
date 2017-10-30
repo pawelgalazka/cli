@@ -24,6 +24,24 @@ describe('microcli', () => {
     })
   })
 
+  describe('with string annotation given', () => {
+    const annotation = 'General script description'
+
+    it('prints basic help', () => {
+      microcli(['node', 'path/scriptname', '--help'], annotation, null, logger)(callback)
+      expect(logger.log.mock.calls).toEqual([
+        ['Usage: scriptname  \n'],
+        ['General script description\n'],
+      ])
+    })
+
+    it('executes callback with params and options', () => {
+      microcli(['node', 'scriptname', '--foo=bar', '-a', 'abc', 'def'], annotation, null, logger)(callback)
+      expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+      expect(logger.log).not.toHaveBeenCalled()
+    })
+  })
+
   describe('with annotations given', () => {
     let annotations
 
@@ -63,12 +81,12 @@ describe('microcli', () => {
       expect(callback).not.toHaveBeenCalled()
     })
 
-    describe('and other extra', () => {
+    describe('and custom annotation', () => {
       beforeEach(() => {
         annotations['examples'] = 'examples content'
       })
 
-      it('prints help with extra annotation', () => {
+      it('prints help with custom annotation', () => {
         microcli(['node', 'path/scriptname', '--help'], annotations, null, logger)(callback)
         expect(logger.log.mock.calls).toEqual([
           ['Usage: scriptname [options] [abc def]\n'],

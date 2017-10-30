@@ -1,6 +1,6 @@
 const path = require('path')
 const microargs = require('microargs')
-const { get, difference, isEmpty, padEnd, forEach, capitalize, omit } = require('lodash')
+const { get, difference, isEmpty, padEnd, forEach, capitalize, omit, isString } = require('lodash')
 
 function optionToString (optionName) {
   return optionName.length === 1 ? `-${optionName}` : `--${optionName}`
@@ -45,6 +45,12 @@ module.exports = (argv, annotations = {}, help, logger = console) => {
   return (callback) => {
     const { params, options } = microargs(argv.slice(2))
     const scriptName = path.basename(argv[1])
+
+    if (isString(annotations)) {
+      annotations = {
+        description: annotations
+      }
+    }
 
     if (options.help) {
       return help(scriptName, annotations, logger)
