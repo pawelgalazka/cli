@@ -4,7 +4,7 @@ CLI scripts micro engine
 ```js
 #!/usr/bin/env node
 const microcli = require('microcli')
-const cli = microcli(process.argv);
+const cli = microcli(process.argv, 'Script doc');
 cli((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
@@ -18,6 +18,10 @@ OPTIONS {a: true, foo: 'bar', boo: true }
 P1 abc
 P2 def
 
+$ script.js --help
+Usage: script.js
+
+Script doc
 ```
 
 ### Annotations
