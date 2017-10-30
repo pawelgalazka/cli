@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const microcli = require('../index')
+const microcli = require('../../index')
 
 const main = microcli(process.argv, {
   description: 'base command',

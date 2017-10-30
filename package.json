@@ -6,10 +6,8 @@
   "scripts": {
     "test": "yarn run test:lint && yarn run test:unit && yarn run test:e2e",
     "test:lint": "eslint *.js",
-    "test:unit": "jest",
-    "test:e2e": "yarn run test:e2e:simple && yarn run test:e2e:commands",
-    "test:e2e:simple": "./test/simple.e2e.js -a --foo=bar abc def",
-    "test:e2e:commands": "./test/commands.e2e.js status --help",
+    "test:unit": "jest ./test/index.spec.js",
+    "test:e2e": "jest ./test/index.e2e.spec.js",
     "precommit": "yarn run test:lint"
   },
   "engines": {
@@ -37,6 +35,7 @@
     "microargs": "1.1.0"
   },
   "devDependencies": {
+    "dedent": "^0.7.0",
     "eslint": "4.9.0",
     "eslint-config-standard": "10.2.1",
     "eslint-plugin-import": "2.8.0",
