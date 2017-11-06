@@ -7,7 +7,8 @@ describe('microcli', () => {
   beforeEach(() => {
     callback = jest.fn()
     logger = {
-      log: jest.fn()
+      log: jest.fn(),
+      error: jest.fn()
     }
   })
 
@@ -75,12 +76,14 @@ describe('microcli', () => {
       ])
     })
 
-    it('throws error if option name is incorrect', () => {
-      const cli = microcli(['node', 'path/scriptname', '--abc'], annotations, null, logger)
-      expect(() => {
-        cli(() => {})
-      }).toThrow('Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information')
+    it('logs error if option name is incorrect', () => {
+      microcli(['node', 'path/scriptname', '--abc'], annotations, null, logger)(callback)
       expect(callback).not.toHaveBeenCalled()
+      expect(logger.error.mock.calls).toEqual([
+        ['Illegal option: --abc'],
+        ['Available options: -a --foo'],
+        ['Type "scriptname --help" for more information']
+      ])
     })
 
     describe('and custom annotation', () => {
