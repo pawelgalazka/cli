@@ -18,9 +18,11 @@ describe('microcli', () => {
       expect(logger.log).not.toHaveBeenCalled()
     })
 
-    it('prints no help', () => {
+    it('prints info that there is no documentation', () => {
       microcli(['node', 'scriptname', '--help'], null, null, logger)(callback)
-      expect(logger.log).not.toHaveBeenCalled()
+      expect(logger.log.mock.calls).toEqual([
+        ['Documentation not found'],
+      ])
     })
   })
 

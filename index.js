@@ -12,6 +12,7 @@ function optionsToString (optionsKeys) {
 
 function printHelp (scriptName, annotations, logger) {
   if (isEmpty(annotations)) {
+    logger.log('Documentation not found')
     return null
   }
 
