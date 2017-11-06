@@ -2,6 +2,8 @@ const path = require('path')
 const microargs = require('microargs')
 const { get, difference, isEmpty, padEnd, forEach, capitalize, omit, isString } = require('lodash')
 
+class CLIError extends Error { }
+
 function optionToString (optionName) {
   return optionName.length === 1 ? `-${optionName}` : `--${optionName}`
 }
@@ -62,12 +64,14 @@ module.exports = (argv, annotations = {}, help, logger = console) => {
     const illegalOptionsKeys = difference(optionsKeys, annotatedOptionsKeys)
 
     if (annotatedOptionsKeys.length && illegalOptionsKeys.length) {
-      logger.error(`Illegal option: ${optionsToString(illegalOptionsKeys)}`)
-      logger.error(`Available options: ${optionsToString(annotatedOptionsKeys)}`)
-      logger.error(`Type "${scriptName} --help" for more information`)
-      return null
+      const msg = `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
+        `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
+        `Type "${scriptName} --help" for more information`
+      throw new CLIError(msg)
     }
 
     return callback(options, ...params)
   }
 }
+
+module.exports.CLIError = CLIError

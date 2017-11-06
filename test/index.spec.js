@@ -76,14 +76,12 @@ describe('microcli', () => {
       ])
     })
 
-    it('logs error if option name is incorrect', () => {
-      microcli(['node', 'path/scriptname', '--abc'], annotations, null, logger)(callback)
+    it('throws error if option name is incorrect', () => {
+      const cli = microcli(['node', 'path/scriptname', '--abc'], annotations, null, logger)
+      expect(() => {
+        cli(callback)
+      }).toThrow('Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information')
       expect(callback).not.toHaveBeenCalled()
-      expect(logger.error.mock.calls).toEqual([
-        ['Illegal option: --abc'],
-        ['Available options: -a --foo'],
-        ['Type "scriptname --help" for more information']
-      ])
     })
 
     describe('and custom annotation', () => {
