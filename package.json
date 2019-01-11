@@ -10,7 +10,7 @@
     "test:e2e": "jest ./test/index.e2e.spec.js"
   },
   "engines": {
-    "node": ">=6.11.1"
+    "node": ">=6.16.0"
   },
   "repository": {
     "type": "git",
