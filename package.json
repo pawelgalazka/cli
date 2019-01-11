@@ -7,8 +7,7 @@
     "test": "yarn run test:lint && yarn run test:unit && yarn run test:e2e",
     "test:lint": "eslint *.js",
     "test:unit": "jest ./test/index.spec.js",
-    "test:e2e": "jest ./test/index.e2e.spec.js",
-    "precommit": "yarn run test:lint"
+    "test:e2e": "jest ./test/index.e2e.spec.js"
   },
   "engines": {
     "node": ">=6.11.1"
@@ -47,5 +46,10 @@
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run test:lint"
+    }
   }
 }
