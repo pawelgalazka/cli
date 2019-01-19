@@ -78,7 +78,7 @@ function printHelp(
   })
 }
 
-export = (
+const Cli = (
   argv: string[],
   annotations: IAnnoations | string = {},
   help: PrintHelp = printHelp,
@@ -117,3 +117,7 @@ export = (
     return callback(options, ...params)
   }
 }
+
+Cli.CliError = CLIError
+
+export = Cli
