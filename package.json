@@ -2,12 +2,19 @@
   "name": "microcli",
   "version": "1.3.2",
   "description": "CLI scripts micro engine",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "yarn run test:lint && yarn run test:unit && yarn run test:e2e",
     "test:lint": "eslint *.js",
     "test:unit": "jest ./test/index.spec.js",
     "test:e2e": "jest ./test/index.e2e.spec.js"
+  },
+  "lint-staged": {
+    "src/*.{ts,tsx}": [
+      "tslint --fix",
+      "git add",
+      "jest --bail --findRelatedTests"
+    ]
   },
   "engines": {
     "node": ">=6.16.0"
@@ -31,25 +38,19 @@
   "homepage": "https://github.com/pawelgalazka/microcli#readme",
   "dependencies": {
     "lodash": "4.17.11",
-    "microargs": "1.1.1"
+    "microargs": "1.1.2"
   },
   "devDependencies": {
-    "dedent": "^0.7.0",
-    "eslint": "5.12.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-node": "8.0.1",
-    "eslint-plugin-promise": "4.0.1",
-    "eslint-plugin-standard": "4.0.0",
+    "@types/jest": "23.3.12",
+    "dedent": "0.7.0",
     "husky": "1.3.1",
-    "jest": "23.6.0"
-  },
-  "jest": {
-    "testEnvironment": "node"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run test:lint"
-    }
+    "jest": "23.6.0",
+    "lint-staged": "8.1.0",
+    "prettier": "1.15.3",
+    "ts-jest": "23.10.5",
+    "tslint": "5.12.1",
+    "tslint-config-prettier": "1.17.0",
+    "tslint-plugin-prettier": "2.0.1",
+    "typescript": "3.2.2"
   }
 }
