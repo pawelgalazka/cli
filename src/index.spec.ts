@@ -1,123 +1,183 @@
-/* eslint-env jest */
-const microcli = require('./index')
+import microcli from "./index"
 
-describe('microcli', () => {
-  let callback, logger
+describe("microcli", () => {
+  let callback: any
+  let logger: any
 
   beforeEach(() => {
     callback = jest.fn()
     logger = {
-      log: jest.fn(),
-      error: jest.fn()
+      error: jest.fn(),
+      log: jest.fn()
     }
   })
 
-  describe('without annotations given', () => {
-    it('executes callback with params and options', () => {
-      microcli(['node', 'scriptname', '--foo=bar', '-a', 'abc', 'def'], null, null, logger)(callback)
-      expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+  describe("without annotations given", () => {
+    it("executes callback with params and options", () => {
+      microcli(
+        ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
+        undefined,
+        undefined,
+        logger
+      )(callback)
+      expect(callback).toHaveBeenCalledWith(
+        { a: true, foo: "bar" },
+        "abc",
+        "def"
+      )
       expect(logger.log).not.toHaveBeenCalled()
     })
 
-    it('prints info that there is no documentation', () => {
-      microcli(['node', 'scriptname', '--help'], null, null, logger)(callback)
-      expect(logger.log.mock.calls).toEqual([
-        ['Documentation not found'],
-      ])
+    it("prints info that there is no documentation", () => {
+      microcli(["node", "scriptname", "--help"], undefined, undefined, logger)(
+        callback
+      )
+      expect(logger.log.mock.calls).toEqual([["Documentation not found"]])
     })
   })
 
-  describe('with string annotation given', () => {
-    const annotation = 'General script description'
+  describe("with string annotation given", () => {
+    const annotation: any = "General script description"
 
-    it('prints basic help', () => {
-      microcli(['node', 'path/scriptname', '--help'], annotation, null, logger)(callback)
+    it("prints basic help", () => {
+      microcli(
+        ["node", "path/scriptname", "--help"],
+        annotation,
+        undefined,
+        logger
+      )(callback)
       expect(logger.log.mock.calls).toEqual([
-        ['Usage: scriptname  \n'],
-        ['General script description\n'],
+        ["Usage: scriptname  \n"],
+        ["General script description\n"]
       ])
     })
 
-    it('executes callback with params and options', () => {
-      microcli(['node', 'scriptname', '--foo=bar', '-a', 'abc', 'def'], annotation, null, logger)(callback)
-      expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+    it("executes callback with params and options", () => {
+      microcli(
+        ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
+        annotation,
+        undefined,
+        logger
+      )(callback)
+      expect(callback).toHaveBeenCalledWith(
+        { a: true, foo: "bar" },
+        "abc",
+        "def"
+      )
       expect(logger.log).not.toHaveBeenCalled()
     })
   })
 
-  describe('with annotations given', () => {
-    let annotations
+  describe("with annotations given", () => {
+    let annotations: any
 
     beforeEach(() => {
       annotations = {
-        description: 'General script description',
-        params: ['abc', 'def'],
+        description: "General script description",
         options: {
-          a: 'description for a option',
-          foo: 'description for foo option'
-        }
+          a: "description for a option",
+          foo: "description for foo option"
+        },
+        params: ["abc", "def"]
       }
     })
 
-    it('executes callback with params and options', () => {
-      microcli(['node', 'scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, null, logger)(callback)
-      expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+    it("executes callback with params and options", () => {
+      microcli(
+        ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
+        annotations,
+        undefined,
+        logger
+      )(callback)
+      expect(callback).toHaveBeenCalledWith(
+        { a: true, foo: "bar" },
+        "abc",
+        "def"
+      )
       expect(logger.log).not.toHaveBeenCalled()
     })
 
-    it('prints basic help', () => {
-      microcli(['node', 'path/scriptname', '--help'], annotations, null, logger)(callback)
+    it("prints basic help", () => {
+      microcli(
+        ["node", "path/scriptname", "--help"],
+        annotations,
+        undefined,
+        logger
+      )(callback)
       expect(logger.log.mock.calls).toEqual([
-        ['Usage: scriptname [options] [abc def]\n'],
-        ['General script description\n'],
-        ['Options:\n'],
-        ['  -a          description for a option'],
-        ['  --foo       description for foo option']
+        ["Usage: scriptname [options] [abc def]\n"],
+        ["General script description\n"],
+        ["Options:\n"],
+        ["  -a          description for a option"],
+        ["  --foo       description for foo option"]
       ])
     })
 
-    it('throws error if option name is incorrect', () => {
-      const cli = microcli(['node', 'path/scriptname', '--abc'], annotations, null, logger)
+    it("throws error if option name is incorrect", () => {
+      const cli = microcli(
+        ["node", "path/scriptname", "--abc"],
+        annotations,
+        undefined,
+        logger
+      )
       expect(() => {
         cli(callback)
-      }).toThrow('Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information')
+      }).toThrow(
+        'Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information'
+      )
       expect(callback).not.toHaveBeenCalled()
     })
 
-    describe('and custom annotation', () => {
+    describe("and custom annotation", () => {
       beforeEach(() => {
-        annotations['examples'] = 'examples content'
+        annotations.examples = "examples content"
       })
 
-      it('prints help with custom annotation', () => {
-        microcli(['node', 'path/scriptname', '--help'], annotations, null, logger)(callback)
+      it("prints help with custom annotation", () => {
+        microcli(
+          ["node", "path/scriptname", "--help"],
+          annotations,
+          undefined,
+          logger
+        )(callback)
         expect(logger.log.mock.calls).toEqual([
-          ['Usage: scriptname [options] [abc def]\n'],
-          ['General script description\n'],
-          ['Options:\n'],
-          ['  -a          description for a option'],
-          ['  --foo       description for foo option'],
-          ['\nExamples:\n'],
-          ['examples content\n']
+          ["Usage: scriptname [options] [abc def]\n"],
+          ["General script description\n"],
+          ["Options:\n"],
+          ["  -a          description for a option"],
+          ["  --foo       description for foo option"],
+          ["\nExamples:\n"],
+          ["examples content\n"]
         ])
       })
 
-      describe('with help formatting function', () => {
-        let help
+      describe("with help formatting function", () => {
+        let help: any
 
         beforeEach(() => {
           help = jest.fn()
         })
 
-        it('executes callback with params and options', () => {
-          microcli(['node', 'scriptname', '--foo=bar', '-a', 'abc', 'def'], annotations, help, logger)(callback)
-          expect(callback).toHaveBeenCalledWith({a: true, foo: 'bar'}, 'abc', 'def')
+        it("executes callback with params and options", () => {
+          microcli(
+            ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
+            annotations,
+            help,
+            logger
+          )(callback)
+          expect(callback).toHaveBeenCalledWith(
+            { a: true, foo: "bar" },
+            "abc",
+            "def"
+          )
           expect(logger.log).not.toHaveBeenCalled()
         })
 
-        it('calls provided help function to handle annotations', () => {
-          microcli(['node', 'scriptname', '--help'], annotations, help, logger)(callback)
-          expect(help).toHaveBeenCalledWith('scriptname', annotations, logger)
+        it("calls provided help function to handle annotations", () => {
+          microcli(["node", "scriptname", "--help"], annotations, help, logger)(
+            callback
+          )
+          expect(help).toHaveBeenCalledWith("scriptname", annotations, logger)
           expect(help).toHaveBeenCalledTimes(1)
         })
       })

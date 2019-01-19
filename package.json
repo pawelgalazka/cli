@@ -7,9 +7,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "tslint -c tslint.json 'src/*.ts'",
-    "test": "yarn run test:lint && yarn run test:unit && yarn run test:e2e",
-    "test:unit": "jest ./test/index.spec.ts",
-    "test:e2e": "jest ./test/index.e2e.spec.ts"
+    "test": "yarn run lint && yarn run test:unit && yarn build && yarn run test:e2e",
+    "test:unit": "jest ./src/index.spec.ts",
+    "test:e2e": "jest ./src/index.e2e.spec.ts"
   },
   "lint-staged": {
     "src/*.{ts,tsx}": [

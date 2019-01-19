@@ -1,36 +1,72 @@
-const path = require('path')
-const microargs = require('microargs')
-const { get, difference, isEmpty, padEnd, forEach, capitalize, omit, isString } = require('lodash')
+import {
+  capitalize,
+  difference,
+  forEach,
+  isEmpty,
+  isString,
+  omit,
+  padEnd
+} from "lodash"
+import microargs from "microargs"
+import path from "path"
 
-class CLIError extends Error { }
+class CLIError extends Error {}
 
-function optionToString (optionName) {
+type Logger = typeof console
+
+interface IOptions {
+  [key: string]: number | string | boolean
+}
+
+interface IAnnoations {
+  description?: string
+  params?: string[]
+  options?: IOptions
+  [key: string]: any
+}
+
+type PrintHelp = (
+  scriptName: string,
+  annotations: IAnnoations,
+  logger: Logger
+) => void | null
+
+type CliCallback = (options: IOptions, ...params: string[]) => any
+
+function optionToString(optionName: string) {
   return optionName.length === 1 ? `-${optionName}` : `--${optionName}`
 }
 
-function optionsToString (optionsKeys) {
-  return optionsKeys.map(optionToString).join(' ')
+function optionsToString(optionsKeys: string[]) {
+  return optionsKeys.map(optionToString).join(" ")
 }
 
-function printHelp (scriptName, annotations, logger) {
+function printHelp(
+  scriptName: string,
+  annotations: IAnnoations,
+  logger: Logger
+): null | void {
   if (isEmpty(annotations)) {
-    logger.log('Documentation not found')
+    logger.log("Documentation not found")
     return null
   }
 
   const { description, params, options } = annotations
-  const extra = omit(annotations, ['description', 'params', 'options'])
-  const usageOptions = isEmpty(options) ? '' : '[options]'
-  const usageParams = isEmpty(params) ? '' : `[${params.join(' ')}]`
+  const extra = omit(annotations, ["description", "params", "options"])
+  const usageOptions = isEmpty(options) ? "" : "[options]"
+  const usageParams =
+    !Array.isArray(params) || isEmpty(params) ? "" : `[${params.join(" ")}]`
 
-  logger.log(`Usage: ${path.basename(scriptName)} ${usageOptions} ${usageParams}\n`)
+  logger.log(
+    `Usage: ${path.basename(scriptName)} ${usageOptions} ${usageParams}\n`
+  )
 
   if (description) {
     logger.log(`${description}\n`)
   }
 
   if (!isEmpty(options)) {
-    logger.log('Options:\n')
+    logger.log("Options:\n")
     forEach(options, (value, key) => {
       logger.log(`  ${padEnd(optionToString(key), 12)}${value}`)
     })
@@ -42,10 +78,13 @@ function printHelp (scriptName, annotations, logger) {
   })
 }
 
-module.exports = (argv, annotations = {}, help, logger = console) => {
-  help = help || printHelp
-
-  return (callback) => {
+export = (
+  argv: string[],
+  annotations: IAnnoations | string = {},
+  help: PrintHelp = printHelp,
+  logger: Logger = console
+) => {
+  return (callback: CliCallback) => {
     const { params, options } = microargs(argv.slice(2))
     const scriptName = path.basename(argv[1])
 
@@ -59,12 +98,17 @@ module.exports = (argv, annotations = {}, help, logger = console) => {
       return help(scriptName, annotations, logger)
     }
 
-    const annotatedOptionsKeys = (get(annotations, 'options') && Object.keys(annotations.options)) || []
+    const annotatedOptionsKeys =
+      (annotations &&
+        annotations.options &&
+        Object.keys(annotations.options)) ||
+      []
     const optionsKeys = Object.keys(options)
     const illegalOptionsKeys = difference(optionsKeys, annotatedOptionsKeys)
 
     if (annotatedOptionsKeys.length && illegalOptionsKeys.length) {
-      const msg = `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
+      const msg =
+        `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
         `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
         `Type "${scriptName} --help" for more information`
       throw new CLIError(msg)
@@ -73,5 +117,3 @@ module.exports = (argv, annotations = {}, help, logger = console) => {
     return callback(options, ...params)
   }
 }
-
-module.exports.CLIError = CLIError

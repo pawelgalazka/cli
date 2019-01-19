@@ -1,17 +1,17 @@
-/* eslint-env jest */
-const { execSync } = require('child_process')
-const dedent = require('dedent')
+import { execSync } from "child_process"
+// tslint:disable-next-line:no-implicit-dependencies
+import dedent from "dedent"
 
-describe('microcli e2e', () => {
-  it('handles simple script', () => {
-    expect(execSync('../test/scripts/simple.js -a --foo=bar abc def').toString())
+describe("microcli e2e", () => {
+  it("handles simple script", () => {
+    expect(execSync("./test/scripts/simple.js -a --foo=bar abc def").toString())
       .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }
       P1 abc
       P2 def\n`)
   })
 
-  it('handles script based on commands', () => {
-    expect(execSync('../test/scripts/commands.js status --help').toString())
+  it("handles script based on commands", () => {
+    expect(execSync("./test/scripts/commands.js status --help").toString())
       .toEqual(dedent`Usage: status [options] [p]
 
         Fake git status
