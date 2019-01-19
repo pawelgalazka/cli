@@ -1,5 +1,5 @@
 /* eslint-env jest */
-const microcli = require('../index')
+const microcli = require('./index')
 
 describe('microcli', () => {
   let callback, logger
