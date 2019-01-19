@@ -1,1 +1,8 @@
-/test
+*.spec.ts
+/src
+/.huskyrc.json
+/.travis.yml
+/.prettierrc.json
+/jest.config.js
+/tslint.json
+/tsconfig.json
