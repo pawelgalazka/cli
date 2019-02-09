@@ -1,4 +1,4 @@
-import microargs from "@pawelgalazka/cli-args"
+import microargs from '@pawelgalazka/cli-args'
 import {
   capitalize,
   difference,
@@ -7,8 +7,8 @@ import {
   isString,
   omit,
   padEnd
-} from "lodash"
-import path from "path"
+} from 'lodash'
+import path from 'path'
 
 export class CLIError extends Error {}
 
@@ -38,7 +38,7 @@ function optionToString(optionName: string) {
 }
 
 function optionsToString(optionsKeys: string[]) {
-  return optionsKeys.map(optionToString).join(" ")
+  return optionsKeys.map(optionToString).join(' ')
 }
 
 function printHelp(
@@ -47,15 +47,15 @@ function printHelp(
   logger: Logger
 ): null | void {
   if (isEmpty(annotations)) {
-    logger.log("Documentation not found")
+    logger.log('Documentation not found')
     return null
   }
 
   const { description, params, options } = annotations
-  const extra = omit(annotations, ["description", "params", "options"])
-  const usageOptions = isEmpty(options) ? "" : "[options]"
+  const extra = omit(annotations, ['description', 'params', 'options'])
+  const usageOptions = isEmpty(options) ? '' : '[options]'
   const usageParams =
-    !Array.isArray(params) || isEmpty(params) ? "" : `[${params.join(" ")}]`
+    !Array.isArray(params) || isEmpty(params) ? '' : `[${params.join(' ')}]`
 
   logger.log(
     `Usage: ${path.basename(scriptName)} ${usageOptions} ${usageParams}\n`
@@ -66,7 +66,7 @@ function printHelp(
   }
 
   if (!isEmpty(options)) {
-    logger.log("Options:\n")
+    logger.log('Options:\n')
     forEach(options, (value, key) => {
       logger.log(`  ${padEnd(optionToString(key), 12)}${value}`)
     })
