@@ -1,6 +1,6 @@
-import { Cli as microcli } from "./index"
+import { cli } from "./index"
 
-describe("microcli", () => {
+describe("cli", () => {
   let callback: any
   let logger: any
 
@@ -14,7 +14,7 @@ describe("microcli", () => {
 
   describe("without annotations given", () => {
     it("executes callback with params and options", () => {
-      microcli(
+      cli(
         ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
         undefined,
         undefined,
@@ -29,7 +29,7 @@ describe("microcli", () => {
     })
 
     it("prints info that there is no documentation", () => {
-      microcli(["node", "scriptname", "--help"], undefined, undefined, logger)(
+      cli(["node", "scriptname", "--help"], undefined, undefined, logger)(
         callback
       )
       expect(logger.log.mock.calls).toEqual([["Documentation not found"]])
@@ -40,12 +40,9 @@ describe("microcli", () => {
     const annotation: any = "General script description"
 
     it("prints basic help", () => {
-      microcli(
-        ["node", "path/scriptname", "--help"],
-        annotation,
-        undefined,
-        logger
-      )(callback)
+      cli(["node", "path/scriptname", "--help"], annotation, undefined, logger)(
+        callback
+      )
       expect(logger.log.mock.calls).toEqual([
         ["Usage: scriptname  \n"],
         ["General script description\n"]
@@ -53,7 +50,7 @@ describe("microcli", () => {
     })
 
     it("executes callback with params and options", () => {
-      microcli(
+      cli(
         ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
         annotation,
         undefined,
@@ -83,7 +80,7 @@ describe("microcli", () => {
     })
 
     it("executes callback with params and options", () => {
-      microcli(
+      cli(
         ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
         annotations,
         undefined,
@@ -98,7 +95,7 @@ describe("microcli", () => {
     })
 
     it("prints basic help", () => {
-      microcli(
+      cli(
         ["node", "path/scriptname", "--help"],
         annotations,
         undefined,
@@ -114,14 +111,14 @@ describe("microcli", () => {
     })
 
     it("throws error if option name is incorrect", () => {
-      const cli = microcli(
+      const cliScript = cli(
         ["node", "path/scriptname", "--abc"],
         annotations,
         undefined,
         logger
       )
       expect(() => {
-        cli(callback)
+        cliScript(callback)
       }).toThrow(
         'Illegal option: --abc\nAvailable options: -a --foo\nType "scriptname --help" for more information'
       )
@@ -134,7 +131,7 @@ describe("microcli", () => {
       })
 
       it("prints help with custom annotation", () => {
-        microcli(
+        cli(
           ["node", "path/scriptname", "--help"],
           annotations,
           undefined,
@@ -159,7 +156,7 @@ describe("microcli", () => {
         })
 
         it("executes callback with params and options", () => {
-          microcli(
+          cli(
             ["node", "scriptname", "--foo=bar", "-a", "abc", "def"],
             annotations,
             help,
@@ -174,7 +171,7 @@ describe("microcli", () => {
         })
 
         it("calls provided help function to handle annotations", () => {
-          microcli(["node", "scriptname", "--help"], annotations, help, logger)(
+          cli(["node", "scriptname", "--help"], annotations, help, logger)(
             callback
           )
           expect(help).toHaveBeenCalledWith("scriptname", annotations, logger)

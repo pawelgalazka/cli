@@ -2,7 +2,7 @@ import { execSync } from "child_process"
 // tslint:disable-next-line:no-implicit-dependencies
 import dedent from "dedent"
 
-describe("microcli e2e", () => {
+describe("cli e2e", () => {
   it("handles simple script", () => {
     expect(execSync("./test/scripts/simple.js -a --foo=bar abc def").toString())
       .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }

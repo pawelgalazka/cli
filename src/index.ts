@@ -78,7 +78,7 @@ function printHelp(
   })
 }
 
-export function Cli(
+export function cli(
   argv: string[],
   annotations: IAnnoations | string = {},
   help: PrintHelp = printHelp,

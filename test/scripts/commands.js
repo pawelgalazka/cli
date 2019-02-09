@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const { Cli } = require('../../lib/index')
+const { cli } = require('../../lib/index')
 
-const main = Cli(process.argv, {
+const main = cli(process.argv, {
   description: 'base command',
   params: ['p'],
   options: {
@@ -9,7 +9,7 @@ const main = Cli(process.argv, {
   }
 })
 
-const status = Cli(process.argv.slice(1), {
+const status = cli(process.argv.slice(1), {
   description: 'Fake git status',
   params: ['p'],
   options: {
@@ -17,7 +17,7 @@ const status = Cli(process.argv.slice(1), {
   }
 })
 
-const branch = Cli(process.argv.slice(1), {
+const branch = cli(process.argv.slice(1), {
   description: 'Fake git branch',
   params: ['p'],
   options: {
