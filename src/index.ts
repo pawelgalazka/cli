@@ -10,7 +10,7 @@ import {
 } from "lodash"
 import path from "path"
 
-class CLIError extends Error {}
+export class CLIError extends Error {}
 
 type Logger = typeof console
 
@@ -78,12 +78,12 @@ function printHelp(
   })
 }
 
-const Cli = (
+export function Cli(
   argv: string[],
   annotations: IAnnoations | string = {},
   help: PrintHelp = printHelp,
   logger: Logger = console
-) => {
+) {
   return (callback: CliCallback) => {
     const { params, options } = microargs(argv.slice(2))
     const scriptName = path.basename(argv[1])
@@ -117,7 +117,3 @@ const Cli = (
     return callback(options, ...params)
   }
 }
-
-Cli.CliError = CLIError
-
-export = Cli

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const microcli = require('../../lib/index')
+const { Cli } = require('../../lib/index')
 
-const main = microcli(process.argv, {
+const main = Cli(process.argv, {
   description: 'base command',
   params: ['p'],
   options: {
@@ -9,7 +9,7 @@ const main = microcli(process.argv, {
   }
 })
 
-const status = microcli(process.argv.slice(1), {
+const status = Cli(process.argv.slice(1), {
   description: 'Fake git status',
   params: ['p'],
   options: {
@@ -17,7 +17,7 @@ const status = microcli(process.argv.slice(1), {
   }
 })
 
-const branch = microcli(process.argv.slice(1), {
+const branch = Cli(process.argv.slice(1), {
   description: 'Fake git branch',
   params: ['p'],
   options: {

@@ -23,21 +23,6 @@ module.exports = {
     }
   },
 
-  // A set of global variables that need to be available in all test environments
-  globals: {
-    "ts-jest": {
-      "tsConfig": "tsconfig.json"
-    }
-  },
-
-  // An array of file extensions your modules use
-  moduleFileExtensions: [
-    "ts",
-    "tsx",
-    "js",
-    "jsx"
-  ],
-
   // The root directory that Jest should scan for tests and modules within
   rootDir: "./src",
   
@@ -47,10 +32,5 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     "**/*.spec.(ts|tsx)"
-  ],
-
-  // A map from regular expressions to paths to transformers
-  transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest"
-  }
+  ]
 };

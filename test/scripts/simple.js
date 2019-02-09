@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const microcli = require('../../lib/index')
-const cli = microcli(process.argv, {
+const { Cli } = require('../../lib/index')
+const cli = Cli(process.argv, {
   description: 'Basic script description',
   params: ['p1', 'p2'],
   options: {

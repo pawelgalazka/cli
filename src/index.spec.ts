@@ -1,4 +1,4 @@
-import microcli from "./index"
+import { Cli as microcli } from "./index"
 
 describe("microcli", () => {
   let callback: any
