@@ -1,4 +1,4 @@
-# CLI ![node version](https://img.shields.io/node/v/microcli.svg) [![Build Status](https://travis-ci.org/pawelgalazka/microcli.svg?branch=master)](https://travis-ci.org/pawelgalazka/microcli) [![npm version](https://badge.fury.io/js/microcli.svg)](https://badge.fury.io/js/microcli)
+# CLI ![node version](https://img.shields.io/node/v/%40pawelgalazka%2Fcli.svg) [![Build Status](https://travis-ci.org/pawelgalazka/microcli.svg?branch=master)](https://travis-ci.org/pawelgalazka/microcli) [![npm version](https://badge.fury.io/js/microcli.svg)](https://badge.fury.io/js/microcli)
 CLI scripts micro engine
 
 ```js
@@ -28,8 +28,8 @@ Script doc
 
 ```js
 #!/usr/bin/env node
-const microcli = require('microcli')
-const cli = microcli(process.argv, {
+const cli = require('@pawelgalazka/cli')
+const cliScript = cli(process.argv, {
   description: 'Basic script description',
   params: ['p1', 'p2'],
   options: {
@@ -39,7 +39,7 @@ const cli = microcli(process.argv, {
   examples: 'some examples'
 });
 
-cli((options, p1, p2) => {
+cliScript((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
     console.log('P2', p2)
@@ -77,74 +77,6 @@ Also each annotation is optional and custom annotations like `examples`
 (basically other than description, params and options) will be treated
 in `--help` content as additional header with string value.
 
-### Commands
-```
-$ script.js status --foo abc 
-OPTIONS {foo: true}
-P abc
-
-$ script.js branch --help
-Usage: branch [options] [p]
-
-Basic script description
-
-$ script.js --foo abc
-OPTIONS {foo: true}
-P abc
-
-```
-
-```js
-#!/usr/bin/env node
-const microcli = require('microcli')
-
-const main = microcli(process.argv, {
-  description: 'base command',
-  params: ['p'],
-  options: {
-    foo: 'foo option'
-  }
-})
-
-const status = microcli(process.argv.slice(1), {
-  description: 'Fake git status',
-  params: ['p'],
-  options: {
-    foo: 'foo option'
-  }
-})
-
-const branch = microcli(process.argv.slice(1), {
-  description: 'Fake git branch',
-  params: ['p'],
-  options: {
-    foo: 'foo option'
-  }
-})
-
-switch (process.argv[2]) {
-  case 'status':
-    status((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
-    break
-
-  case 'branch':
-    branch((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
-    break
-
-  default:
-    main((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
-}
-```
-
 ### Custom --help
 
 You can provide `help` function to `cli` call, which can generate
@@ -152,14 +84,14 @@ custom help message, having annotations object:
 
 ```js
 #!/usr/bin/env node
-const microcli = require('microcli')
-const cli = microcli(process.argv, {
+const cli = require('@pawelgalazka/cli')
+const cliScript = cli(process.argv, {
   /* some annotations */
 }, (scriptName, annotations, logger) => {
   logger.log('Custom --help message') 
 });
 
-cli((options, p1, p2) => {
+cliScript((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
     console.log('P2', p2)
