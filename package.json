@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "tslint -c tslint.json 'src/*.ts'",
+    "lint": "tslint -c tslint.json 'src/*.ts' 'test/*.ts'",
     "test": "yarn run lint && yarn run test:unit && yarn build && yarn run test:e2e",
     "test:unit": "jest ./src/index.spec.ts",
     "test:e2e": "jest ./src/index.e2e.spec.ts"
