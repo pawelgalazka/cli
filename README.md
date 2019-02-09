@@ -3,7 +3,7 @@ CLI scripts micro engine
 
 ```js
 #!/usr/bin/env node
-const cli = require('@pawelgalazka/cli')
+const { cli } = require('@pawelgalazka/cli')
 const cliScript = cli(process.argv, 'Script doc');
 cliScript((options, p1, p2) => {
     console.log('OPTIONS', options)
@@ -28,7 +28,7 @@ Script doc
 
 ```js
 #!/usr/bin/env node
-const cli = require('@pawelgalazka/cli')
+const { cli } = require('@pawelgalazka/cli')
 const cliScript = cli(process.argv, {
   description: 'Basic script description',
   params: ['p1', 'p2'],
@@ -84,7 +84,7 @@ custom help message, having annotations object:
 
 ```js
 #!/usr/bin/env node
-const cli = require('@pawelgalazka/cli')
+const { cli } = require('@pawelgalazka/cli')
 const cliScript = cli(process.argv, {
   /* some annotations */
 }, (scriptName, annotations, logger) => {
