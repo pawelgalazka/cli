@@ -1,3 +1,4 @@
+import microargs from "@pawelgalazka/cli-args"
 import {
   capitalize,
   difference,
@@ -7,7 +8,6 @@ import {
   omit,
   padEnd
 } from "lodash"
-import microargs from "microargs"
 import path from "path"
 
 class CLIError extends Error {}
