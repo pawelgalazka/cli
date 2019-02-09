@@ -2,13 +2,11 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-  // Indicates whether the coverage information should be collected while executing the test
-  // collectCoverage: false,
-
-  // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: [
-    "<rootDir>/**/*.ts"
-  ],
+  // A list of paths to directories that Jest should use to search for files in.
+  roots: ["<rootDir>/src/", "<rootDir>/tests/"],
+  
+  // The test environment that will be used for testing
+  testEnvironment: "node",
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
@@ -21,16 +19,5 @@ module.exports = {
     "global": {
       "lines": 50
     }
-  },
-
-  // The root directory that Jest should scan for tests and modules within
-  rootDir: "./src",
-  
-  // The test environment that will be used for testing
-  testEnvironment: "node",
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    "**/*.spec.(ts|tsx)"
-  ]
+  }
 };
