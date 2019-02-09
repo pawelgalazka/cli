@@ -1,6 +1,6 @@
 {
-  "name": "microcli",
-  "version": "1.3.3",
+  "name": "@pawelgalazka/cli",
+  "version": "1.3.4",
   "description": "CLI scripts micro engine",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -24,6 +24,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pawelgalazka/microcli.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "cli",
