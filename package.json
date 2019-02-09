@@ -1,6 +1,6 @@
 {
   "name": "@pawelgalazka/cli",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "CLI scripts micro engine",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
