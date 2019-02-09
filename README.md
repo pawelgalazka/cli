@@ -1,11 +1,11 @@
-# microcli ![node version](https://img.shields.io/node/v/microcli.svg) [![Build Status](https://travis-ci.org/pawelgalazka/microcli.svg?branch=master)](https://travis-ci.org/pawelgalazka/microcli) [![npm version](https://badge.fury.io/js/microcli.svg)](https://badge.fury.io/js/microcli)
+# CLI ![node version](https://img.shields.io/node/v/microcli.svg) [![Build Status](https://travis-ci.org/pawelgalazka/microcli.svg?branch=master)](https://travis-ci.org/pawelgalazka/microcli) [![npm version](https://badge.fury.io/js/microcli.svg)](https://badge.fury.io/js/microcli)
 CLI scripts micro engine
 
 ```js
 #!/usr/bin/env node
-const microcli = require('microcli')
-const cli = microcli(process.argv, 'Script doc');
-cli((options, p1, p2) => {
+const cli = require('@pawelgalazka/cli')
+const cliScript = cli(process.argv, 'Script doc');
+cliScript((options, p1, p2) => {
     console.log('OPTIONS', options)
     console.log('P1', p1)
     console.log('P2', p2)
