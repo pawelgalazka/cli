@@ -1,6 +1,6 @@
 import { difference } from 'lodash'
 
-import { CLIError } from './errors'
+import { CLIIllegalOption } from './errors'
 import { IAnnoations } from './help'
 import { IOptions } from './parse'
 import { optionsToString } from './utils'
@@ -21,6 +21,6 @@ export function validate(
       `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
       `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
       `Type "${scriptName} --help" for more information`
-    throw new CLIError(msg)
+    throw new CLIIllegalOption(msg)
   }
 }

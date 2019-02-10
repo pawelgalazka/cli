@@ -1,4 +1,4 @@
-import { CLICommandNotFound, CLIError } from './errors'
+import { CLICommandNotFound, CLIIllegalOption } from './errors'
 import { printAllHelp } from './help'
 import { Logger } from './logger'
 import { parseAllCommands } from './parse'
@@ -16,7 +16,10 @@ export function cli(tasksfile: any) {
       printAllHelp(tasksfile, logger)
     }
   } catch (error) {
-    if (error instanceof CLICommandNotFound || error instanceof CLIError) {
+    if (
+      error instanceof CLICommandNotFound ||
+      error instanceof CLIIllegalOption
+    ) {
       logger.error(error.message)
       process.exit(1)
     } else {
