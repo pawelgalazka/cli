@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-const { cli } = require('../../lib/index')
-const cliScript = cli(process.argv, {
+const { cli, help } = require('../../lib/index')
+
+help(main, {
   description: 'Basic script description',
   params: ['p1', 'p2'],
   options: {
@@ -10,8 +11,12 @@ const cliScript = cli(process.argv, {
   examples: 'some examples'
 })
 
-cliScript((options, p1, p2) => {
+function main (options, p1, p2) {
   console.log('OPTIONS', options)
   console.log('P1', p1)
   console.log('P2', p2)
+}
+
+cli({
+  default: main
 })
