@@ -3,6 +3,8 @@ import { printAllHelp } from './help'
 import { Logger } from './logger'
 import { parseAllCommands } from './parse'
 
+export { help } from './help'
+
 export function cli(tasksfile: any) {
   const logger = new Logger()
   try {
