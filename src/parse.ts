@@ -48,14 +48,14 @@ export function parseAllCommands(
   const taskName = subtaskName || args[2]
 
   if (typeof obj[taskName] === 'function') {
-    const cli = parseCommand(
+    const command = parseCommand(
       args.slice(1),
       obj[taskName].help,
       undefined,
       logger as any
     )
 
-    cli((options, ...params) => {
+    command((options, ...params) => {
       obj[taskName](options, ...params)
     })
     return obj[taskName]
@@ -78,6 +78,20 @@ export function parseAllCommands(
   }
 
   if (!subtaskName) {
+    if (typeof obj.default === 'function') {
+      const command = parseCommand(
+        args,
+        obj.default.help,
+        undefined,
+        logger as any
+      )
+
+      command((options, ...params) => {
+        obj.default(options, ...params)
+      })
+      return obj[taskName]
+    }
+
     throw new CLICommandNotFound(`Command ${taskName} not found`)
   }
 }
