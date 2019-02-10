@@ -19,7 +19,7 @@ export type PrintHelp = (
   logger: ILogger
 ) => void | null
 
-export interface ITaskFunction {
+export interface ICommandFunction {
   (...args: any[]): any
   help?: string | IAnnoations
 }
@@ -92,7 +92,10 @@ export function printAllHelp(obj: any, logger: ILogger, namespace?: string) {
   })
 }
 
-export function help(func: ITaskFunction, annotation?: string | IAnnoations) {
+export function help(
+  func: ICommandFunction,
+  annotation?: string | IAnnoations
+) {
   // Because the validation above currently gets compiled out,
   // Explictly  validate the function input
   if (typeof func === 'function') {
