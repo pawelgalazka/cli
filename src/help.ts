@@ -19,6 +19,11 @@ export type PrintHelp = (
   logger: ILogger
 ) => void | null
 
+export interface ITaskFunction {
+  (...args: any[]): any
+  help?: string | IAnnoations
+}
+
 export function printHelp(
   scriptName: string,
   annotations: IAnnoations,
@@ -85,4 +90,14 @@ export function printAllHelp(obj: any, logger: ILogger, namespace?: string) {
       printAllHelp(value, logger, nextNamespace)
     }
   })
+}
+
+export function help(func: ITaskFunction, annotation?: string | IAnnoations) {
+  // Because the validation above currently gets compiled out,
+  // Explictly  validate the function input
+  if (typeof func === 'function') {
+    func.help = annotation
+  } else {
+    throw new Error('first help() argument must be a function')
+  }
 }
