@@ -43,9 +43,11 @@
   "homepage": "https://github.com/pawelgalazka/cli#readme",
   "dependencies": {
     "@pawelgalazka/cli-args": "1.1.3",
+    "chalk": "2.4.2",
     "lodash": "4.17.11"
   },
   "devDependencies": {
+    "@babel/core": "7.2.2",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-typescript": "7.1.0",
     "@types/dedent": "0.7.0",
