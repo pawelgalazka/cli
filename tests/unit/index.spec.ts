@@ -1,4 +1,4 @@
-import { cli } from '../src/index'
+import { cli } from '../../src/index'
 
 describe('cli', () => {
   let callback: any

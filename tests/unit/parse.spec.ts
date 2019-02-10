@@ -1,5 +1,5 @@
-import { CLICommandNotFound } from '../src/errors'
-import { parseAllCommands } from '../src/parse'
+import { CLICommandNotFound } from '../../src/errors'
+import { parseAllCommands } from '../../src/parse'
 
 describe('parseAllCommands()', () => {
   let obj: any

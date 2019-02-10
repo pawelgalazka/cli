@@ -1,7 +1,7 @@
 /* tslint:disable:no-empty */
 import chalk from 'chalk'
 
-import { printAllHelp } from '../src/help'
+import { printAllHelp } from '../../src/help'
 
 describe('printAllHelp()', () => {
   let obj: any
