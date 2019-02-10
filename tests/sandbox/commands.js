@@ -1,48 +1,44 @@
 #!/usr/bin/env node
-const { cli } = require('../../lib/index')
+const { cli, help } = require('../../lib/index')
 
-const main = cli(process.argv, {
+help(main, {
   description: 'base command',
   params: ['p'],
   options: {
     foo: 'foo option'
   }
 })
+function main (options, p) {
+  console.log('OPTIONS', options)
+  console.log('P', p)
+}
 
-const status = cli(process.argv.slice(1), {
+help(status, {
   description: 'Fake git status',
   params: ['p'],
   options: {
     foo: 'foo option'
   }
 })
+function status (options, p) {
+  console.log('OPTIONS', options)
+  console.log('P', p)
+}
 
-const branch = cli(process.argv.slice(1), {
+help(branch, {
   description: 'Fake git branch',
   params: ['p'],
   options: {
     foo: 'foo option'
   }
 })
-
-switch (process.argv[2]) {
-  case 'status':
-    status((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
-    break
-
-  case 'branch':
-    branch((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
-    break
-
-  default:
-    main((options, p) => {
-      console.log('OPTIONS', options)
-      console.log('P', p)
-    })
+function branch (options, p) {
+  console.log('OPTIONS', options)
+  console.log('P', p)
 }
+
+cli({
+  default: main,
+  status,
+  branch
+})
