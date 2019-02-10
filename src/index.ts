@@ -1,4 +1,4 @@
-import microargs from '@pawelgalazka/cli-args'
+import cliArgs from '@pawelgalazka/cli-args'
 import { isString } from 'lodash'
 import path from 'path'
 
@@ -17,7 +17,7 @@ export function cli(
   logger: ILogger = console
 ) {
   return (callback: CliCallback) => {
-    const { params, options } = microargs(argv.slice(2))
+    const { params, options } = cliArgs(argv.slice(2))
     const scriptName = path.basename(argv[1])
 
     if (isString(annotations)) {
