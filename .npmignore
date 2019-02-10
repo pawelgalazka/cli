@@ -4,6 +4,7 @@
 /.travis.yml
 /.prettierrc.json
 /.vscode
+/.babelrc
 /tests
 /jest.config.js
 /tslint.json
