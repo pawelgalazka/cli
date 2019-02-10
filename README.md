@@ -3,12 +3,17 @@ CLI scripts micro engine
 
 ```js
 #!/usr/bin/env node
-const { cli } = require('@pawelgalazka/cli')
-const cliScript = cli(process.argv, 'Script doc');
-cliScript((options, p1, p2) => {
-    console.log('OPTIONS', options)
-    console.log('P1', p1)
-    console.log('P2', p2)
+const { cli, help } = require('@pawelgalazka/cli')
+
+help(main, 'Script doc')
+function main (options, p1, p2) {
+  console.log('OPTIONS', options)
+  console.log('P1', p1)
+  console.log('P2', p2)
+}
+
+cli({
+  default: main
 })
 ```
 
@@ -28,8 +33,9 @@ Script doc
 
 ```js
 #!/usr/bin/env node
-const { cli } = require('@pawelgalazka/cli')
-const cliScript = cli(process.argv, {
+const { cli, help } = require('@pawelgalazka/cli')
+
+help(main, {
   description: 'Basic script description',
   params: ['p1', 'p2'],
   options: {
@@ -37,12 +43,15 @@ const cliScript = cli(process.argv, {
     foo: 'description for foo option'
   },
   examples: 'some examples'
-});
+})
+function main (options, p1, p2) {
+  console.log('OPTIONS', options)
+  console.log('P1', p1)
+  console.log('P2', p2)
+}
 
-cliScript((options, p1, p2) => {
-    console.log('OPTIONS', options)
-    console.log('P1', p1)
-    console.log('P2', p2)
+cli({
+  default: main
 })
 ```
 
@@ -76,6 +85,38 @@ Type "script.js --help" for more information
 Also each annotation is optional and custom annotations like `examples`
 (basically other than description, params and options) will be treated
 in `--help` content as additional header with string value.
+
+### Commands
+
+
+```js
+#!/usr/bin/env node
+const { cli, help } = require('@pawelgalazka/cli')
+
+help(cmd1, 'Script doc 1')
+function cmd1 (options) {
+  console.log('Command 1')
+}
+
+help(cmd2, 'Script doc 2')
+function cmd2 (options) {
+  console.log('Command 1')
+}
+
+cli({
+  cmd1,
+  cmd2
+})
+```
+
+```
+$ script.js cmd1
+Command 1
+
+$ script.js cmd2
+Command 2
+```
+
 
 ### Custom --help
 
