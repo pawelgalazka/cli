@@ -1,6 +1,7 @@
 import { CLICommandNotFound } from './errors'
 import { HelpAnnotations, printHelp } from './helper'
 import { ILogger } from './logger'
+import { validate } from './validator'
 
 export interface ICLIOptions {
   [key: string]: number | string | boolean
@@ -39,7 +40,7 @@ export function interpret({
     if (options.help) {
       return printHelp({ node, namespace, logger })
     } else {
-      // validate({ command, options, params, namespace})
+      validate({ command, options, namespace })
       return command(options, ...params)
     }
   }
