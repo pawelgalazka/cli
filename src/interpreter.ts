@@ -11,14 +11,14 @@ export interface ICommandFunction {
 }
 
 export interface ICommandsTree {
-  [key: string]: CommandsTreeNode
+  [namespace: string]: CommandsTreeNode
 }
 
 export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
   node: CommandsTreeNode
-  namespace?: string
+  namespace: string
 }
 
 export type CLIParams = string[]
@@ -37,7 +37,7 @@ export function interpret({
   if (typeof node === 'function') {
     const command = node
     if (options.help) {
-      return helper({ command, namespace })
+      return helper({ node, namespace })
     } else {
       // validate({ command, options, params, namespace})
       return command(options, ...params)
@@ -51,7 +51,7 @@ export function interpret({
 
   if (nextNode) {
     return interpret({
-      namespace,
+      namespace: nextNamespace,
       node: nextNode,
       options,
       params: nextParams
@@ -62,6 +62,7 @@ export function interpret({
       helper({ node, namespace })
     }
     return interpret({
+      namespace,
       node: defaultCommand,
       options,
       params: nextParams
