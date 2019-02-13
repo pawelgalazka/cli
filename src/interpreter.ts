@@ -1,5 +1,6 @@
 import { CLICommandNotFound } from './errors'
-import { IAnnoations } from './help'
+import { HelpAnnotations, printHelp } from './helper'
+import { ILogger } from './logger'
 
 export interface ICLIOptions {
   [key: string]: number | string | boolean
@@ -7,7 +8,7 @@ export interface ICLIOptions {
 
 export interface ICommandFunction {
   (...args: any[]): any
-  help?: string | IAnnoations
+  help?: HelpAnnotations
 }
 
 export interface ICommandsTree {
@@ -19,25 +20,24 @@ export interface IInterpreterArguments {
   params: CLIParams
   node: CommandsTreeNode
   namespace: string
+  logger: ILogger
 }
 
 export type CLIParams = string[]
 
 export type CommandsTreeNode = ICommandsTree | ICommandFunction
 
-function helper(opts: any): any {
-  return 1
-}
 export function interpret({
   options,
   params,
   node,
-  namespace
+  namespace,
+  logger
 }: IInterpreterArguments): any {
   if (typeof node === 'function') {
     const command = node
     if (options.help) {
-      return helper({ node, namespace })
+      return printHelp({ node, namespace, logger })
     } else {
       // validate({ command, options, params, namespace})
       return command(options, ...params)
@@ -51,6 +51,7 @@ export function interpret({
 
   if (nextNode) {
     return interpret({
+      logger,
       namespace: nextNamespace,
       node: nextNode,
       options,
@@ -59,9 +60,10 @@ export function interpret({
   }
   if (defaultCommand) {
     if (options.help) {
-      helper({ node, namespace })
+      printHelp({ node, namespace, logger })
     }
     return interpret({
+      logger,
       namespace,
       node: defaultCommand,
       options,
