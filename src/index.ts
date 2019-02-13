@@ -1,4 +1,5 @@
 import cliArgs from '@pawelgalazka/cli-args'
+import { basename } from 'path'
 
 import { CLICommandNotFound, CLIIllegalOption } from './errors'
 import { CommandsTreeNode, interpret } from './interpreter'
@@ -10,7 +11,7 @@ export function cli(node: CommandsTreeNode) {
   const logger = new Logger()
   try {
     const { params, options } = cliArgs(process.argv.slice(2))
-    const namespace = process.argv[1]
+    const namespace = basename(process.argv[1])
 
     interpret({ options, params, node, logger, namespace })
   } catch (error) {
