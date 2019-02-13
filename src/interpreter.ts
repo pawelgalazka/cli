@@ -5,24 +5,25 @@ export interface ICLIOptions {
   [key: string]: number | string | boolean
 }
 
-export type CLIParams = string[]
-
 export interface ICommandFunction {
   (...args: any[]): any
   help?: string | IAnnoations
 }
 
 export interface ICommandsTree {
-  [key: string]: ICommandsTree | ICommandFunction | undefined
-  default?: ICommandFunction
+  [key: string]: CommandsTreeNode
 }
 
 export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
-  commands: ICommandsTree | ICommandFunction
+  node: CommandsTreeNode
   namespace?: string
 }
+
+export type CLIParams = string[]
+
+export type CommandsTreeNode = ICommandsTree | ICommandFunction
 
 function helper(opts: any): any {
   return 1
@@ -30,11 +31,11 @@ function helper(opts: any): any {
 export function interpret({
   options,
   params,
-  commands,
+  node,
   namespace
 }: IInterpreterArguments): any {
-  if (typeof commands === 'function') {
-    const command = commands
+  if (typeof node === 'function') {
+    const command = node
     if (options.help) {
       return helper({ command, namespace })
     } else {
@@ -43,27 +44,29 @@ export function interpret({
     }
   }
 
-  if (commands) {
-    const namespace = params[0]
-    const nextParams = params.slice(1)
-    const nextCommands = commands[namespace]
+  const nextNamespace = params[0]
+  const nextParams = params.slice(1)
+  const nextNode = node[nextNamespace]
+  const defaultCommand = node.default
 
-    if (nextCommands) {
-      return interpret({
-        commands: nextCommands,
-        namespace,
-        options,
-        params: nextParams
-      })
+  if (nextNode) {
+    return interpret({
+      namespace,
+      node: nextNode,
+      options,
+      params: nextParams
+    })
+  }
+  if (defaultCommand) {
+    if (options.help) {
+      helper({ node, namespace })
     }
-    if (commands.default) {
-      return interpret({
-        commands: commands.default,
-        options,
-        params: nextParams
-      })
-    }
+    return interpret({
+      node: defaultCommand,
+      options,
+      params: nextParams
+    })
   }
 
-  throw new CLICommandNotFound()
+  throw new CLICommandNotFound(namespace || nextNamespace)
 }
