@@ -1,20 +1,18 @@
+import cliArgs from '@pawelgalazka/cli-args'
+
 import { CLICommandNotFound, CLIIllegalOption } from './errors'
-import { printAllHelp } from './help'
+import { CommandsTreeNode, interpret } from './interpreter'
 import { Logger } from './logger'
-import { parseAllCommands } from './parse'
 
-export { help } from './help'
+export { help } from './helper'
 
-export function cli(tasksfile: any) {
+export function cli(node: CommandsTreeNode) {
   const logger = new Logger()
   try {
-    const ARGV = process.argv.slice()
+    const { params, options } = cliArgs(process.argv.slice(2))
+    const namespace = process.argv[1]
 
-    if (ARGV.length > 2) {
-      parseAllCommands(tasksfile, ARGV, logger)
-    } else {
-      printAllHelp(tasksfile, logger)
-    }
+    interpret({ options, params, node, logger, namespace })
   } catch (error) {
     if (
       error instanceof CLICommandNotFound ||
