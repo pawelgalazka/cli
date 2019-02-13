@@ -90,38 +90,40 @@ function printNamespaceHelp({
   namespace,
   logger
 }: IPrintNamespaceHelpArguments) {
-  Object.keys(commands).forEach(key => {
-    const node = commands[key]
-    const nextNamespace = namespace ? `${namespace}:${key}` : key
+  Object.keys(commands)
+    .sort()
+    .forEach(key => {
+      const node = commands[key]
+      const nextNamespace = namespace ? `${namespace}:${key}` : key
 
-    if (typeof node === 'function' && node.help) {
-      let annotations = node.help
+      if (typeof node === 'function' && node.help) {
+        let annotations = node.help
 
-      if (typeof annotations === 'string') {
-        annotations = { description: annotations }
+        if (typeof annotations === 'string') {
+          annotations = { description: annotations }
+        }
+        // Add task name
+        const funcParams = annotations && annotations.params
+        const logArgs = [chalk.bold(nextNamespace)]
+
+        // Add task params
+        if (Array.isArray(funcParams) && funcParams.length) {
+          logArgs[0] += ` [${funcParams.join(' ')}]`
+        }
+
+        // Add description
+        if (annotations.description) {
+          const description = annotations.description
+          logArgs[0] = padEnd(logArgs[0], 40) // format
+          logArgs.push('-', description.split('\n')[0])
+        }
+
+        // Log
+        logger.log(...logArgs)
+      } else if (typeof node === 'object') {
+        printNamespaceHelp({ commands: node, logger, namespace: nextNamespace })
       }
-      // Add task name
-      const funcParams = annotations && annotations.params
-      const logArgs = [chalk.bold(nextNamespace)]
-
-      // Add task params
-      if (Array.isArray(funcParams) && funcParams.length) {
-        logArgs[0] += ` [${funcParams.join(' ')}]`
-      }
-
-      // Add description
-      if (annotations.description) {
-        const description = annotations.description
-        logArgs[0] = padEnd(logArgs[0], 40) // format
-        logArgs.push('-', description.split('\n')[0])
-      }
-
-      // Log
-      logger.log(...logArgs)
-    } else if (typeof node === 'object') {
-      printNamespaceHelp({ commands: node, logger, namespace: nextNamespace })
-    }
-  })
+    })
 }
 
 export function printHelp({ node, namespace, logger }: IPrintHelpArguments) {
