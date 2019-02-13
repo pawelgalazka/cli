@@ -7,9 +7,6 @@ export interface ILogger {
 }
 
 export class Logger implements ILogger {
-  public title(...args: any[]) {
-    console.log(chalk.bold(...args))
-  }
   public log(...args: any[]) {
     console.log(...args)
   }
