@@ -96,7 +96,7 @@ function printNamespaceHelp({
       const node = commands[key]
       const nextNamespace = namespace ? `${namespace}:${key}` : key
 
-      if (typeof node === 'function' && node.help) {
+      if (typeof node === 'function') {
         let annotations = node.help
 
         if (typeof annotations === 'string') {
@@ -112,7 +112,7 @@ function printNamespaceHelp({
         }
 
         // Add description
-        if (annotations.description) {
+        if (annotations && annotations.description) {
           const description = annotations.description
           logArgs[0] = padEnd(logArgs[0], 40) // format
           logArgs.push('-', description.split('\n')[0])
