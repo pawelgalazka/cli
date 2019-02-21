@@ -1,15 +1,14 @@
 import { CLICommandNotFound } from './errors'
-import { HelpAnnotations, printHelp } from './helper'
 import { ILogger } from './logger'
-import { validate } from './validator'
 
 export interface ICLIOptions {
   [key: string]: number | string | boolean
 }
 
 export interface ICommandFunction {
-  (...args: any[]): any
-  help?: HelpAnnotations
+  (options: ICLIOptions, ...args: any[]): any
+  [key: string]: any
+  namespace?: string
 }
 
 export interface ICommandsDictionary {
@@ -22,27 +21,26 @@ export interface IInterpreterArguments {
   module: CommandsModule
   namespace: string
   logger: ILogger
+  middleware?: Middleware
 }
 
 export type CLIParams = string[]
 
 export type CommandsModule = ICommandsDictionary | ICommandFunction
 
+export type Middleware = (command: ICommandFunction) => ICommandFunction
+
 export function interpret({
   options,
   params,
   module,
   namespace,
-  logger
+  logger,
+  middleware = command => command
 }: IInterpreterArguments): any {
   if (typeof module === 'function') {
-    const command = module
-    if (options.help) {
-      return printHelp({ module, namespace, logger })
-    } else {
-      validate({ command, options, namespace })
-      return command(options, ...params)
-    }
+    module.namespace = namespace
+    return middleware(module)(options, ...params)
   }
 
   const nextNamespace = params[0]
@@ -60,9 +58,6 @@ export function interpret({
     })
   }
   if (defaultCommand) {
-    if (options.help) {
-      printHelp({ module, namespace, logger })
-    }
     return interpret({
       logger,
       module: defaultCommand,
