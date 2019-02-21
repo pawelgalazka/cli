@@ -2,9 +2,9 @@ import chalk from 'chalk'
 import { capitalize, forEach, isEmpty, omit, padEnd } from 'lodash'
 
 import {
-  CommandsTreeNode,
+  CommandsModule,
   ICommandFunction,
-  ICommandsTree
+  ICommandsDictionary
 } from './interpreter'
 import { ILogger } from './logger'
 import { optionToString } from './utils'
@@ -21,7 +21,7 @@ export interface IHelpDetailedAnnoations {
 }
 
 export interface IPrintHelpArguments {
-  node: CommandsTreeNode
+  module: CommandsModule
   namespace: string
   logger: ILogger
 }
@@ -33,7 +33,7 @@ interface IPrintCommandHelpArguments {
 }
 
 interface IPrintNamespaceHelpArguments {
-  commands: ICommandsTree
+  commands: ICommandsDictionary
   namespace: string
   logger: ILogger
 }
@@ -126,11 +126,11 @@ function printNamespaceHelp({
     })
 }
 
-export function printHelp({ node, namespace, logger }: IPrintHelpArguments) {
-  if (typeof node === 'function') {
-    printCommandHelp({ command: node, namespace, logger })
+export function printHelp({ module, namespace, logger }: IPrintHelpArguments) {
+  if (typeof module === 'function') {
+    printCommandHelp({ command: module, namespace, logger })
   } else {
-    printNamespaceHelp({ commands: node, namespace, logger })
+    printNamespaceHelp({ commands: module, namespace, logger })
   }
 }
 

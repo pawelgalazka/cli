@@ -12,33 +12,33 @@ export interface ICommandFunction {
   help?: HelpAnnotations
 }
 
-export interface ICommandsTree {
-  [namespace: string]: CommandsTreeNode
+export interface ICommandsDictionary {
+  [namespace: string]: CommandsModule
 }
 
 export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
-  node: CommandsTreeNode
+  module: CommandsModule
   namespace: string
   logger: ILogger
 }
 
 export type CLIParams = string[]
 
-export type CommandsTreeNode = ICommandsTree | ICommandFunction
+export type CommandsModule = ICommandsDictionary | ICommandFunction
 
 export function interpret({
   options,
   params,
-  node,
+  module,
   namespace,
   logger
 }: IInterpreterArguments): any {
-  if (typeof node === 'function') {
-    const command = node
+  if (typeof module === 'function') {
+    const command = module
     if (options.help) {
-      return printHelp({ node, namespace, logger })
+      return printHelp({ module, namespace, logger })
     } else {
       validate({ command, options, namespace })
       return command(options, ...params)
@@ -47,26 +47,26 @@ export function interpret({
 
   const nextNamespace = params[0]
   const nextParams = params.slice(1)
-  const nextNode = node[nextNamespace]
-  const defaultCommand = node.default
+  const nextModule = module[nextNamespace]
+  const defaultCommand = module.default
 
-  if (nextNode) {
+  if (nextModule) {
     return interpret({
       logger,
+      module: nextModule,
       namespace: nextNamespace,
-      node: nextNode,
       options,
       params: nextParams
     })
   }
   if (defaultCommand) {
     if (options.help) {
-      printHelp({ node, namespace, logger })
+      printHelp({ module, namespace, logger })
     }
     return interpret({
       logger,
+      module: defaultCommand,
       namespace,
-      node: defaultCommand,
       options,
       params: nextParams
     })

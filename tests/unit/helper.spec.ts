@@ -4,14 +4,14 @@ import chalk from 'chalk'
 import { printHelp } from '../../src/helper'
 
 describe('printHelp()', () => {
-  let node: any
+  let module: any
   let logger: any
   let mockLogger: any
   let namespace: string
 
   beforeEach(() => {
     // namespace = 'script.js'
-    node = {
+    module = {
       a: () => {},
       b: () => {}
     }
@@ -32,7 +32,7 @@ describe('printHelp()', () => {
 
   describe('when node of commands given', () => {
     it('should log list of methods', () => {
-      printHelp({ node, logger, namespace })
+      printHelp({ module, logger, namespace })
       expect(mockLogger.mock.calls).toEqual([
         ['log', chalk.bold('a')],
         ['log', chalk.bold('b')]
@@ -40,10 +40,10 @@ describe('printHelp()', () => {
     })
 
     it('should log method descriptions', () => {
-      node.b = (arg1: any, arg2: any) => {}
-      node.a.help = 'Description for method a'
-      node.b.help = 'Description for method b'
-      printHelp({ node, logger, namespace })
+      module.b = (arg1: any, arg2: any) => {}
+      module.a.help = 'Description for method a'
+      module.b.help = 'Description for method b'
+      printHelp({ module, logger, namespace })
       expect(mockLogger.mock.calls).toEqual([
         [
           'log',
@@ -61,9 +61,9 @@ describe('printHelp()', () => {
     })
 
     it('should log only first line of method descriptions', () => {
-      node.a.help = 'Description for method a\nsecond line\nthird line'
-      node.b.help = 'Description for method b'
-      printHelp({ node, logger, namespace })
+      module.a.help = 'Description for method a\nsecond line\nthird line'
+      module.b.help = 'Description for method b'
+      printHelp({ module, logger, namespace })
       expect(mockLogger.mock.calls).toEqual([
         [
           'log',
@@ -81,7 +81,7 @@ describe('printHelp()', () => {
     })
 
     it('should log list of name spaced / nested methods', () => {
-      node.c = {
+      module.c = {
         d: () => {},
         e: {
           f: () => {},
@@ -89,10 +89,10 @@ describe('printHelp()', () => {
         }
       }
 
-      node.c.help = 'Description for namespace c'
-      node.c.e.f.help = 'Description for method f'
+      module.c.help = 'Description for namespace c'
+      module.c.e.f.help = 'Description for method f'
 
-      printHelp({ node, logger, namespace })
+      printHelp({ module, logger, namespace })
       expect(mockLogger.mock.calls).toEqual([
         ['log', chalk.bold('a')],
         ['log', chalk.bold('b')],
