@@ -22,6 +22,12 @@ describe('interpreter', () => {
       expect(commandsModule.a).toHaveBeenCalledWith({})
     })
 
+    it('calls default command', () => {
+      interpret({ options: {}, params: [], commandsModule, namespace: '' })
+      expect(commandsModule.default).toHaveBeenCalledTimes(1)
+      expect(commandsModule.default).toHaveBeenCalledWith({})
+    })
+
     it('calls command with params', () => {
       interpret({
         commandsModule,
@@ -31,6 +37,17 @@ describe('interpreter', () => {
       })
       expect(commandsModule.a).toHaveBeenCalledTimes(1)
       expect(commandsModule.a).toHaveBeenCalledWith({}, 'arg1', 'arg2')
+    })
+
+    it('calls default command with params', () => {
+      interpret({
+        commandsModule,
+        namespace: '',
+        options: {},
+        params: ['arg1', 'arg2']
+      })
+      expect(commandsModule.default).toHaveBeenCalledTimes(1)
+      expect(commandsModule.default).toHaveBeenCalledWith({}, 'arg1', 'arg2')
     })
 
     it('calls command with options', () => {
@@ -43,6 +60,18 @@ describe('interpreter', () => {
       })
       expect(commandsModule.a).toHaveBeenCalledTimes(1)
       expect(commandsModule.a).toHaveBeenCalledWith(options)
+    })
+
+    it('calls default command with options', () => {
+      const options = { op1: 'o1', op2: 'o2' }
+      interpret({
+        commandsModule,
+        namespace: '',
+        options,
+        params: []
+      })
+      expect(commandsModule.default).toHaveBeenCalledTimes(1)
+      expect(commandsModule.default).toHaveBeenCalledWith(options)
     })
   })
 

@@ -58,7 +58,7 @@ export function interpret({
       commandsModule: defaultCommand,
       namespace,
       options,
-      params: nextParams
+      params
     })
   }
 
