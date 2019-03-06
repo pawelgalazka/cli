@@ -18,7 +18,7 @@ export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
   commandsModule: CommandsModule
-  namespace: string
+  namespace?: string
   middleware?: Middleware
 }
 

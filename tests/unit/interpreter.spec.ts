@@ -18,13 +18,13 @@ describe('interpreter', () => {
 
     describe('first module level', () => {
       it('calls command', () => {
-        interpret({ options: {}, params: ['a'], commandsModule, namespace: '' })
+        interpret({ options: {}, params: ['a'], commandsModule })
         expect(commandsModule.a).toHaveBeenCalledTimes(1)
         expect(commandsModule.a).toHaveBeenCalledWith({})
       })
 
       it('calls default command', () => {
-        interpret({ options: {}, params: [], commandsModule, namespace: '' })
+        interpret({ options: {}, params: [], commandsModule })
         expect(commandsModule.default).toHaveBeenCalledTimes(1)
         expect(commandsModule.default).toHaveBeenCalledWith({})
       })
@@ -32,7 +32,6 @@ describe('interpreter', () => {
       it('calls command with params', () => {
         interpret({
           commandsModule,
-          namespace: '',
           options: {},
           params: ['a', 'arg1', 'arg2']
         })
@@ -43,7 +42,6 @@ describe('interpreter', () => {
       it('calls default command with params', () => {
         interpret({
           commandsModule,
-          namespace: '',
           options: {},
           params: ['arg1', 'arg2']
         })
@@ -55,7 +53,6 @@ describe('interpreter', () => {
         const options = { op1: 'o1', op2: 'o2' }
         interpret({
           commandsModule,
-          namespace: '',
           options,
           params: ['a']
         })
@@ -67,7 +64,6 @@ describe('interpreter', () => {
         const options = { op1: 'o1', op2: 'o2' }
         interpret({
           commandsModule,
-          namespace: '',
           options,
           params: []
         })
