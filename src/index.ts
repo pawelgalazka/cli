@@ -7,13 +7,13 @@ import { Logger } from './logger'
 
 export { help } from './middlewares/helper'
 
-export function cli(module: CommandsModule) {
+export function cli(commandsModule: CommandsModule) {
   const logger = new Logger()
   try {
     const { params, options } = cliArgs(process.argv.slice(2))
     const namespace = basename(process.argv[1])
 
-    interpret({ options, params, module, logger, namespace })
+    interpret({ options, params, commandsModule, logger, namespace })
   } catch (error) {
     if (
       error instanceof CLICommandNotFound ||

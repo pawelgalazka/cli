@@ -18,7 +18,7 @@ export interface ICommandsDictionary {
 export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
-  module: CommandsModule
+  commandsModule: CommandsModule
   namespace: string
   logger: ILogger
   middleware?: Middleware
@@ -33,25 +33,25 @@ export type Middleware = (command: ICommandFunction) => ICommandFunction
 export function interpret({
   options,
   params,
-  module,
+  commandsModule,
   namespace,
   logger,
   middleware = command => command
 }: IInterpreterArguments): any {
-  if (typeof module === 'function') {
-    module.namespace = namespace
-    return middleware(module)(options, ...params)
+  if (typeof commandsModule === 'function') {
+    commandsModule.namespace = namespace
+    return middleware(commandsModule)(options, ...params)
   }
 
   const nextNamespace = params[0]
   const nextParams = params.slice(1)
-  const nextModule = module[nextNamespace]
-  const defaultCommand = module.default
+  const nextModule = commandsModule[nextNamespace]
+  const defaultCommand = commandsModule.default
 
   if (nextModule) {
     return interpret({
+      commandsModule: nextModule,
       logger,
-      module: nextModule,
       namespace: nextNamespace,
       options,
       params: nextParams
@@ -59,8 +59,8 @@ export function interpret({
   }
   if (defaultCommand) {
     return interpret({
+      commandsModule: defaultCommand,
       logger,
-      module: defaultCommand,
       namespace,
       options,
       params: nextParams
