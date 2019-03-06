@@ -13,7 +13,7 @@ export function cli(commandsModule: CommandsModule) {
     const { params, options } = cliArgs(process.argv.slice(2))
     const namespace = basename(process.argv[1])
 
-    interpret({ options, params, commandsModule, logger, namespace })
+    interpret({ options, params, commandsModule, namespace })
   } catch (error) {
     if (
       error instanceof CLICommandNotFound ||

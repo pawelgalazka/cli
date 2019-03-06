@@ -1,5 +1,4 @@
 import { CLICommandNotFound } from './errors'
-import { ILogger } from './logger'
 
 export interface ICLIOptions {
   [key: string]: number | string | boolean
@@ -20,7 +19,6 @@ export interface IInterpreterArguments {
   params: CLIParams
   commandsModule: CommandsModule
   namespace: string
-  logger: ILogger
   middleware?: Middleware
 }
 
@@ -35,7 +33,6 @@ export function interpret({
   params,
   commandsModule,
   namespace,
-  logger,
   middleware = command => command
 }: IInterpreterArguments): any {
   if (typeof commandsModule === 'function') {
@@ -51,7 +48,6 @@ export function interpret({
   if (nextModule) {
     return interpret({
       commandsModule: nextModule,
-      logger,
       namespace: nextNamespace,
       options,
       params: nextParams
@@ -60,7 +56,6 @@ export function interpret({
   if (defaultCommand) {
     return interpret({
       commandsModule: defaultCommand,
-      logger,
       namespace,
       options,
       params: nextParams
