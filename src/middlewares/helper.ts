@@ -5,9 +5,9 @@ import {
   CommandsModule,
   ICommandFunction,
   ICommandsDictionary
-} from './interpreter'
-import { ILogger } from './logger'
-import { optionToString } from './utils'
+} from '../interpreter'
+import { ILogger } from '../logger'
+import { optionToString } from '../utils'
 
 export interface IOptionsAnnotations {
   [optionName: string]: string

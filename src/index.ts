@@ -5,7 +5,7 @@ import { CLICommandNotFound, CLIIllegalOption } from './errors'
 import { CommandsModule, interpret } from './interpreter'
 import { Logger } from './logger'
 
-export { help } from './helper'
+export { help } from './middlewares/helper'
 
 export function cli(module: CommandsModule) {
   const logger = new Logger()
