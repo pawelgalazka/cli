@@ -89,5 +89,24 @@ describe('interpreter', () => {
     beforeEach(() => {
       commandsModule = jest.fn()
     })
+
+    it('calls command', () => {
+      interpret({ options: {}, params: [], commandsModule })
+      expect(commandsModule).toHaveBeenCalledTimes(1)
+      expect(commandsModule).toHaveBeenCalledWith({})
+    })
+
+    it('calls command with params', () => {
+      interpret({ options: {}, params: ['a', 'b'], commandsModule })
+      expect(commandsModule).toHaveBeenCalledTimes(1)
+      expect(commandsModule).toHaveBeenCalledWith({}, 'a', 'b')
+    })
+
+    it('calls command with options', () => {
+      const options = { op1: 'o1', op2: 'o2' }
+      interpret({ options, params: [], commandsModule })
+      expect(commandsModule).toHaveBeenCalledTimes(1)
+      expect(commandsModule).toHaveBeenCalledWith(options)
+    })
   })
 })
