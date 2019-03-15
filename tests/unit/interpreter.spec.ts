@@ -1,3 +1,4 @@
+import { CLICommandNotFound } from '../../src/errors'
 import { interpret } from '../../src/interpreter'
 
 describe('interpreter', () => {
@@ -16,7 +17,7 @@ describe('interpreter', () => {
       }
     })
 
-    describe('first module level', () => {
+    describe('and no namespace in task name', () => {
       it('calls command', () => {
         interpret({ options: {}, params: ['a'], commandsModule })
         expect(commandsModule.a).toHaveBeenCalledTimes(1)
@@ -69,6 +70,17 @@ describe('interpreter', () => {
         })
         expect(commandsModule.default).toHaveBeenCalledTimes(1)
         expect(commandsModule.default).toHaveBeenCalledWith(options)
+      })
+
+      it('throws error if no default command and command not found', () => {
+        delete commandsModule.default
+        expect(() => {
+          interpret({
+            commandsModule,
+            options: {},
+            params: ['arg1', 'arg2']
+          })
+        }).toThrow(CLICommandNotFound)
       })
     })
   })
