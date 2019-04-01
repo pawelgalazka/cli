@@ -15,8 +15,8 @@ describe('interpreter', () => {
           },
           default: jest.fn()
         },
-        f: {},
-        default: jest.fn()
+        default: jest.fn(),
+        f: {}
       }
     })
 
