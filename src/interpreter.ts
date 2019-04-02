@@ -7,7 +7,6 @@ export interface ICLIOptions {
 export interface ICommandFunction {
   (options: ICLIOptions, ...args: any[]): any
   [key: string]: any
-  namespace?: string
 }
 
 export interface ICommandsDictionary {
@@ -18,7 +17,6 @@ export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
   commandsModule: CommandsModule
-  namespace?: string
   middleware?: Middleware
 }
 
@@ -32,11 +30,9 @@ export function interpret({
   options,
   params,
   commandsModule,
-  namespace,
   middleware = command => command
 }: IInterpreterArguments): any {
   if (typeof commandsModule === 'function') {
-    commandsModule.namespace = namespace
     return middleware(commandsModule)(options, ...params)
   }
 
@@ -48,7 +44,6 @@ export function interpret({
   if (nextModule) {
     return interpret({
       commandsModule: nextModule,
-      namespace: nextNamespace,
       options,
       params: nextParams
     })
@@ -56,11 +51,10 @@ export function interpret({
   if (defaultCommand) {
     return interpret({
       commandsModule: defaultCommand,
-      namespace,
       options,
       params
     })
   }
 
-  throw new CLICommandNotFound(namespace || nextNamespace)
+  throw new CLICommandNotFound(nextNamespace)
 }

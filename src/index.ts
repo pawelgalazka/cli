@@ -1,5 +1,4 @@
 import cliArgs from '@pawelgalazka/cli-args'
-import { basename } from 'path'
 
 import { CLICommandNotFound, CLIIllegalOption } from './errors'
 import { CommandsModule, interpret } from './interpreter'
@@ -11,9 +10,8 @@ export function cli(commandsModule: CommandsModule) {
   const logger = new Logger()
   try {
     const { params, options } = cliArgs(process.argv.slice(2))
-    const namespace = basename(process.argv[1])
 
-    interpret({ options, params, commandsModule, namespace })
+    interpret({ options, params, commandsModule })
   } catch (error) {
     if (
       error instanceof CLICommandNotFound ||
