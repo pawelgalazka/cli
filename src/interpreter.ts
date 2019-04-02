@@ -4,10 +4,7 @@ export interface ICLIOptions {
   [key: string]: number | string | boolean
 }
 
-export interface ICommandFunction {
-  (options: ICLIOptions, ...args: any[]): any
-  [key: string]: any
-}
+export type CommandFunction = (options: ICLIOptions, ...args: any[]) => any
 
 export interface ICommandsDictionary {
   [namespace: string]: CommandsModule
@@ -22,9 +19,9 @@ export interface IInterpreterArguments {
 
 export type CLIParams = string[]
 
-export type CommandsModule = ICommandsDictionary | ICommandFunction
+export type CommandsModule = ICommandsDictionary | CommandFunction
 
-export type Middleware = (command: ICommandFunction) => ICommandFunction
+export type Middleware = (command: CommandFunction) => CommandFunction
 
 export function interpret({
   options,
