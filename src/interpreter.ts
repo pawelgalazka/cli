@@ -1,3 +1,4 @@
+import { get } from 'lodash'
 import { CLICommandNotFound } from './errors'
 
 export interface ICLIOptions {
@@ -14,7 +15,7 @@ export interface IInterpreterArguments {
   options: ICLIOptions
   params: CLIParams
   commandsModule: CommandsModule
-  middleware?: Middleware
+  middlewares?: Middleware[]
 }
 
 export type CLIParams = string[]
@@ -27,31 +28,36 @@ export function interpret({
   options,
   params,
   commandsModule,
-  middleware = command => command
+  middlewares = []
 }: IInterpreterArguments): any {
   if (typeof commandsModule === 'function') {
-    return middleware(commandsModule)(options, ...params)
+    return commandsModule(options, ...params)
   }
 
-  const nextNamespace = params[0]
+  const commandName = (params[0] || '').replace(/:/g, '.')
   const nextParams = params.slice(1)
-  const nextModule = commandsModule[nextNamespace]
-  const defaultCommand = commandsModule.default
 
-  if (nextModule) {
-    return interpret({
-      commandsModule: nextModule,
-      options,
-      params: nextParams
-    })
-  }
-  if (defaultCommand) {
-    return interpret({
-      commandsModule: defaultCommand,
-      options,
-      params
-    })
+  const command: CommandsModule | undefined = get(commandsModule, commandName)
+
+  if (typeof command === 'function') {
+    return command(options, ...nextParams)
   }
 
-  throw new CLICommandNotFound(nextNamespace)
+  if (typeof command === 'object') {
+    const defaultCommand = command.default
+
+    if (typeof defaultCommand === 'function') {
+      return defaultCommand(options, ...nextParams)
+    }
+  }
+
+  if (typeof command === 'undefined') {
+    const defaultCommand = commandsModule.default
+
+    if (typeof defaultCommand === 'function') {
+      return defaultCommand(options, ...params)
+    }
+  }
+
+  throw new CLICommandNotFound()
 }
