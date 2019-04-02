@@ -30,8 +30,13 @@ export function interpret({
   commandsModule,
   middlewares = []
 }: IInterpreterArguments): any {
+  const middleware = middlewares.reduce(
+    (previousMiddleware, nextMiddleware) => command =>
+      nextMiddleware(previousMiddleware(command)),
+    (command: CommandFunction) => command
+  )
   if (typeof commandsModule === 'function') {
-    return commandsModule(options, ...params)
+    return middleware(commandsModule)(options, ...params)
   }
 
   const commandName = (params[0] || '').replace(/:/g, '.')
@@ -40,14 +45,14 @@ export function interpret({
   const command: CommandsModule | undefined = get(commandsModule, commandName)
 
   if (typeof command === 'function') {
-    return command(options, ...nextParams)
+    return middleware(command)(options, ...nextParams)
   }
 
   if (typeof command === 'object') {
     const defaultCommand = command.default
 
     if (typeof defaultCommand === 'function') {
-      return defaultCommand(options, ...nextParams)
+      return middleware(defaultCommand)(options, ...nextParams)
     }
   }
 
@@ -55,7 +60,7 @@ export function interpret({
     const defaultCommand = commandsModule.default
 
     if (typeof defaultCommand === 'function') {
-      return defaultCommand(options, ...params)
+      return middleware(defaultCommand)(options, ...params)
     }
   }
 
