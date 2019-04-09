@@ -31,9 +31,9 @@ export function interpret({
   commandsModule,
   middlewares = []
 }: IInterpreterArguments): any {
-  const middleware = middlewares.reduce(
-    (previousMiddleware, nextMiddleware) => next =>
-      nextMiddleware(previousMiddleware(next))
+  const middleware = middlewares.reduceRight(
+    (nextMiddleware, previousMiddleware) => next =>
+      previousMiddleware(nextMiddleware(next))
   )
-  middleware(() => null)
+  middleware(() => null)({ options, params, commandsModule })
 }
