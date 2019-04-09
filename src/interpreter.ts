@@ -11,10 +11,13 @@ export interface ICommandsDictionary {
   [namespace: string]: CommandsModule
 }
 
-export interface IInterpreterArguments {
+export interface IMiddlewareArguments {
   options: ICLIOptions
   params: CLIParams
   commandsModule: CommandsModule
+}
+
+export interface IInterpreterArguments extends IMiddlewareArguments {
   middlewares?: Middleware[]
 }
 
@@ -22,7 +25,8 @@ export type CLIParams = string[]
 
 export type CommandsModule = ICommandsDictionary | CommandFunction
 
-export type Middleware = (command: CommandFunction) => CommandFunction
+export type MiddlewareThunk = (args: IMiddlewareArguments) => any
+export type Middleware = (next: MiddlewareThunk) => MiddlewareThunk
 
 export function interpret({
   options,
