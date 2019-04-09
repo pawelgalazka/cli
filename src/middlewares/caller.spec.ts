@@ -1,5 +1,5 @@
-import { CLICommandNotFound } from '../../src/errors'
-import { caller } from '../../src/middlewares/caller'
+import { CLICommandNotFound } from '../errors'
+import { caller } from './caller'
 
 describe('interpreter', () => {
   let commandsModule: any
