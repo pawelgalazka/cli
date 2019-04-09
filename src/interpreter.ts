@@ -1,6 +1,3 @@
-import { get } from 'lodash'
-import { CLICommandNotFound } from './errors'
-
 export interface ICLIOptions {
   [key: string]: number | string | boolean
 }
@@ -35,38 +32,8 @@ export function interpret({
   middlewares = []
 }: IInterpreterArguments): any {
   const middleware = middlewares.reduce(
-    (previousMiddleware, nextMiddleware) => command =>
-      nextMiddleware(previousMiddleware(command)),
-    (command: CommandFunction) => command
+    (previousMiddleware, nextMiddleware) => next =>
+      nextMiddleware(previousMiddleware(next))
   )
-  if (typeof commandsModule === 'function') {
-    return middleware(commandsModule)(options, ...params)
-  }
-
-  const commandName = (params[0] || '').replace(/:/g, '.')
-  const nextParams = params.slice(1)
-
-  const command: CommandsModule | undefined = get(commandsModule, commandName)
-
-  if (typeof command === 'function') {
-    return middleware(command)(options, ...nextParams)
-  }
-
-  if (typeof command === 'object') {
-    const defaultCommand = command.default
-
-    if (typeof defaultCommand === 'function') {
-      return middleware(defaultCommand)(options, ...nextParams)
-    }
-  }
-
-  if (typeof command === 'undefined') {
-    const defaultCommand = commandsModule.default
-
-    if (typeof defaultCommand === 'function') {
-      return middleware(defaultCommand)(options, ...params)
-    }
-  }
-
-  throw new CLICommandNotFound()
+  middleware(() => null)
 }
