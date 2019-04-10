@@ -1,5 +1,5 @@
 import { get } from 'lodash'
-import { CLICommandNotFound } from '../errors'
+import { CLICommandNotFound } from '../utils/errors'
 import {
   CLIParams,
   CommandFunction,

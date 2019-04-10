@@ -1,8 +1,8 @@
 import cliArgs from '@pawelgalazka/cli-args'
 
-import { CLICommandNotFound, CLIIllegalOption } from './errors'
+import { CLICommandNotFound, CLIIllegalOption } from './utils/errors'
 import { CommandsModule, interpret } from './interpreter'
-import { Logger } from './logger'
+import { Logger } from './utils/logger'
 
 export { help } from './middlewares/helper'
 

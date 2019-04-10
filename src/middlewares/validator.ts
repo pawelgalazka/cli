@@ -1,8 +1,8 @@
 import { difference } from 'lodash'
 
-import { CLIIllegalOption } from '../errors'
 import { ICLIOptions, ICommandFunction } from '../interpreter'
-import { optionsToString } from '../utils'
+import { optionsToString } from '../utils/options'
+import { CLIIllegalOption } from '../utils/errors'
 
 export interface IValidateArguments {
   command: ICommandFunction

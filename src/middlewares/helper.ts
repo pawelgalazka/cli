@@ -6,8 +6,8 @@ import {
   ICommandsDictionary,
   Middleware
 } from '../interpreter'
-import { ILogger } from '../logger'
-import { optionToString } from '../utils'
+import { ILogger } from '../utils/logger'
+import { optionToString } from '../utils/options'
 
 export interface IOptionsAnnotations {
   [optionName: string]: string

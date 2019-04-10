@@ -1,4 +1,4 @@
-import { CLICommandNotFound } from '../errors'
+import { CLICommandNotFound } from '../utils/errors'
 import { caller } from './caller'
 
 describe('interpreter', () => {
