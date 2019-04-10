@@ -1,4 +1,9 @@
-import { argsParser, errorsHandler } from './middlewares'
+import {
+  argsParser,
+  commandCaller,
+  commandFinder,
+  errorsHandler
+} from './middlewares'
 import { Logger } from './utils/logger'
 import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
 
@@ -28,7 +33,12 @@ export interface IMiddlewareArguments {
 export class CLIError extends Error {}
 
 export function useMiddlewares(middlewares: Middleware[] = []) {
-  const defaultMiddlewares = [errorsHandler(new Logger()), argsParser]
+  const defaultMiddlewares = [
+    errorsHandler(new Logger()),
+    argsParser,
+    commandFinder,
+    commandCaller
+  ]
   const nextMiddlewares = defaultMiddlewares.concat(middlewares)
   return nextMiddlewares
 }
