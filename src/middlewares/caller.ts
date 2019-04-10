@@ -65,8 +65,8 @@ export function getCommandParams(
 }
 
 export const caller: Middleware = next => args => {
-  const command = findCommand(args.commandsModule, args.params)
-  const commandParams = getCommandParams(args.commandsModule, args.params)
+  const command = findCommand(args.definition, args.params)
+  const commandParams = getCommandParams(args.definition, args.params)
 
   if (command) {
     command(args.options, ...commandParams)

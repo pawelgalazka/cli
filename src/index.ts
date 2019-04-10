@@ -22,24 +22,24 @@ export interface ICommandsDictionary {
 export interface IMiddlewareArguments {
   options: ICLIOptions
   params: CLIParams
-  commandsModule: CommandsModule
-  commandName: string
-  commandFunction: CommandFunction
+  definition: CommandsModule
+  namespace: string
+  command: CommandFunction
 }
 
 export interface IInterpreterArguments extends IMiddlewareArguments {
   middlewares?: Middleware[]
 }
 
-export function cli(commandsModule: CommandsModule) {
+export function cli(definition: CommandsModule) {
   const logger = new Logger()
   try {
     const { params, options } = cliArgs(process.argv.slice(2))
 
     middleware<IMiddlewareArguments>([])({
-      commandFunction: () => null,
-      commandName: '',
-      commandsModule,
+      command: () => null,
+      definition,
+      namespace: '',
       options,
       params
     })
