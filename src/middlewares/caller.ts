@@ -1,33 +1,32 @@
 import { get } from 'lodash'
 import { CLICommandNotFound } from '../errors'
-import { CommandsModule, Middleware } from '../interpreter'
+import {
+  CLIParams,
+  CommandFunction,
+  CommandsModule,
+  Middleware
+} from '../interpreter'
 
-export const caller: Middleware = next => ({
-  options,
-  params,
-  commandsModule
-}) => {
+export function findCommand(
+  commandsModule: CommandsModule,
+  params: CLIParams
+): CommandFunction | undefined {
   if (typeof commandsModule === 'function') {
-    commandsModule(options, ...params)
-    return next({ options, params, commandsModule })
+    return commandsModule
   }
 
   const commandName = (params[0] || '').replace(/:/g, '.')
-  const nextParams = params.slice(1)
-
   const command: CommandsModule | undefined = get(commandsModule, commandName)
 
   if (typeof command === 'function') {
-    command(options, ...nextParams)
-    return next({ options, params, commandsModule })
+    return command
   }
 
   if (typeof command === 'object') {
     const defaultCommand = command.default
 
     if (typeof defaultCommand === 'function') {
-      defaultCommand(options, ...nextParams)
-      return next({ options, params, commandsModule })
+      return defaultCommand
     }
   }
 
@@ -35,9 +34,47 @@ export const caller: Middleware = next => ({
     const defaultCommand = commandsModule.default
 
     if (typeof defaultCommand === 'function') {
-      defaultCommand(options, ...params)
-      return next({ options, params, commandsModule })
+      return defaultCommand
     }
+  }
+
+  return undefined
+}
+
+export function getCommandParams(
+  commandsModule: CommandsModule,
+  params: CLIParams
+): CLIParams {
+  if (typeof commandsModule === 'function') {
+    return params.slice()
+  }
+
+  const commandName = (params[0] || '').replace(/:/g, '.')
+
+  const command: CommandsModule | undefined = get(commandsModule, commandName)
+
+  if (typeof command === 'undefined') {
+    const defaultCommand = commandsModule.default
+
+    if (typeof defaultCommand === 'function') {
+      return params.slice()
+    }
+  }
+
+  return params.slice(1)
+}
+
+export const caller: Middleware = next => ({
+  options,
+  params,
+  commandsModule
+}) => {
+  const command = findCommand(commandsModule, params)
+  const commandParams = getCommandParams(commandsModule, params)
+
+  if (command) {
+    command(options, ...commandParams)
+    return next({ options, params, commandsModule })
   }
 
   throw new CLICommandNotFound()
