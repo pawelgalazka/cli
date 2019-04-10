@@ -1,11 +1,7 @@
 import chalk from 'chalk'
 import { capitalize, forEach, isEmpty, omit, padEnd } from 'lodash'
 
-import {
-  CommandFunction,
-  ICommandsDictionary,
-  Middleware
-} from '../interpreter'
+import { CommandFunction, ICommandsDictionary, Middleware } from '../index'
 import { ILogger } from '../utils/logger'
 import { optionToString } from '../utils/options'
 

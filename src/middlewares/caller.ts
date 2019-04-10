@@ -4,7 +4,7 @@ import {
   CommandFunction,
   CommandsModule,
   Middleware
-} from '../interpreter'
+} from '../index'
 import { CLICommandNotFound } from '../utils/errors'
 
 export function findCommand(
