@@ -2,9 +2,9 @@ import chalk from 'chalk'
 import { capitalize, forEach, isEmpty, omit, padEnd } from 'lodash'
 
 import {
-  CommandsModule,
-  ICommandFunction,
-  ICommandsDictionary
+  CommandFunction,
+  ICommandsDictionary,
+  Middleware
 } from '../interpreter'
 import { ILogger } from '../logger'
 import { optionToString } from '../utils'
@@ -20,44 +20,33 @@ export interface IHelpDetailedAnnoations {
   [key: string]: any
 }
 
-export interface IPrintHelpArguments {
-  module: CommandsModule
-  namespace: string
-  logger: ILogger
-}
-
 interface IPrintCommandHelpArguments {
-  command: ICommandFunction
-  namespace: string
+  command: CommandFunction
   logger: ILogger
 }
 
 interface IPrintNamespaceHelpArguments {
   commands: ICommandsDictionary
-  namespace: string
   logger: ILogger
 }
 
 export type HelpAnnotations = string | IHelpDetailedAnnoations
 
-export type PrintHelp = (args: IPrintHelpArguments) => void
+const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
 
-function printCommandHelp({
-  command,
-  namespace,
-  logger
-}: IPrintCommandHelpArguments) {
-  if (!command.help) {
+function printCommandHelp({ command, logger }: IPrintCommandHelpArguments) {
+  const help = annotationsMap.get(command)
+  if (!help) {
     logger.log('Documentation not found')
     return
   }
 
   let annotations: IHelpDetailedAnnoations = {}
 
-  if (typeof command.help === 'string') {
-    annotations.description = command.help
+  if (typeof help === 'string') {
+    annotations.description = help
   } else {
-    annotations = command.help
+    annotations = help
   }
 
   const { description, params, options } = annotations
@@ -87,7 +76,6 @@ function printCommandHelp({
 
 function printNamespaceHelp({
   commands,
-  namespace,
   logger
 }: IPrintNamespaceHelpArguments) {
   Object.keys(commands)
@@ -121,25 +109,33 @@ function printNamespaceHelp({
         // Log
         logger.log(...logArgs)
       } else if (typeof node === 'object') {
-        printNamespaceHelp({ commands: node, logger, namespace: nextNamespace })
+        printNamespaceHelp({ commands: node, logger })
       }
     })
 }
 
-export function printHelp({ module, namespace, logger }: IPrintHelpArguments) {
-  if (typeof module === 'function') {
-    printCommandHelp({ command: module, namespace, logger })
-  } else {
-    printNamespaceHelp({ commands: module, namespace, logger })
-  }
-}
-
-export function help(command: ICommandFunction, annotations: HelpAnnotations) {
+export function help(command: CommandFunction, annotations: HelpAnnotations) {
   // Because the validation above currently gets compiled out,
   // Explictly  validate the function input
   if (typeof command === 'function') {
-    command.help = annotations
+    annotationsMap.set(command, annotations)
   } else {
     throw new Error('First help() argument must be a function')
+  }
+}
+
+export const helper: (logger: ILogger) => Middleware = logger => next => ({
+  options,
+  params,
+  commandsModule
+}) => {
+  if (!options.help) {
+    return next({ options, params, commandsModule })
+  }
+
+  if (typeof commandsModule === 'function') {
+    printCommandHelp({ command: commandsModule, logger })
+  } else {
+    printNamespaceHelp({ commands: commandsModule, logger })
   }
 }
