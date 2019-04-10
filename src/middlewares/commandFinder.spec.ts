@@ -2,7 +2,6 @@ import { CLIError } from '../index'
 import { commandFinder } from './commandFinder'
 
 describe('commandFinder()', () => {
-  let definition: any
   let next: jest.Mock
   let args: any
 
