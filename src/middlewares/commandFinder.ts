@@ -11,8 +11,9 @@ export const commandFinder: Middleware = next => args => {
     })
   }
 
-  const namespace = (params[0] || '').replace(/:/g, '.')
-  const command: CommandsModule | undefined = get(definition, namespace)
+  const namespace = params[0] || ''
+  const path = namespace.replace(/:/g, '.')
+  const command: CommandsModule | undefined = get(definition, path)
   const nextParams = params.slice(1)
 
   if (typeof command === 'function') {

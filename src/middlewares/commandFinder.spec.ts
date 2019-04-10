@@ -6,26 +6,30 @@ describe('commandFinder()', () => {
   let next: jest.Mock
   let args: any
 
+  beforeEach(() => {
+    next = jest.fn()
+    args = {
+      command: () => null,
+      definition: null,
+      namespace: '',
+      options: {},
+      params: []
+    }
+  })
+
   describe('when definition object given', () => {
     beforeEach(() => {
-      next = jest.fn()
-      args = {
-        command: () => null,
-        definition: {
-          a: jest.fn(),
-          b: {
-            c: jest.fn(),
-            d: {
-              e: jest.fn()
-            },
-            default: jest.fn()
+      args.definition = {
+        a: jest.fn(),
+        b: {
+          c: jest.fn(),
+          d: {
+            e: jest.fn()
           },
-          default: jest.fn(),
-          f: {}
+          default: jest.fn()
         },
-        namespace: '',
-        options: {},
-        params: []
+        default: jest.fn(),
+        f: {}
       }
     })
 
@@ -103,73 +107,83 @@ describe('commandFinder()', () => {
 
     describe('with namespace in task name', () => {
       it('calls command from name space', () => {
-        commandFinder(next)({ options: {}, params: ['b:c'], definition })
-        expect(definition.b.c).toHaveBeenCalledTimes(1)
-        expect(definition.b.c).toHaveBeenCalledWith({})
+        commandFinder(next)({ ...args, params: ['b:c'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: args.definition.b.c,
+          namespace: 'b:c'
+        })
       })
 
       it('calls default command from name space', () => {
-        commandFinder(next)({ options: {}, params: ['b'], definition })
-        expect(definition.b.default).toHaveBeenCalledTimes(1)
-        expect(definition.b.default).toHaveBeenCalledWith({})
+        commandFinder(next)({ ...args, params: ['b'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: args.definition.b.default,
+          namespace: 'b'
+        })
       })
 
       it('calls command from name space with options', () => {
         const options = { op1: 'o1', op2: 'o2' }
-        commandFinder(next)({
-          definition,
-          options,
-          params: ['b:c']
+        commandFinder(next)({ ...args, options, params: ['b:c'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: args.definition.b.c,
+          namespace: 'b:c',
+          options
         })
-        expect(definition.b.c).toHaveBeenCalledTimes(1)
-        expect(definition.b.c).toHaveBeenCalledWith(options)
       })
 
       it('calls default command from name space with options', () => {
         const options = { op1: 'o1', op2: 'o2' }
-        commandFinder(next)({
-          definition,
-          options,
-          params: ['b']
+        commandFinder(next)({ ...args, options, params: ['b'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: args.definition.b.default,
+          namespace: 'b',
+          options
         })
-        expect(definition.b.default).toHaveBeenCalledTimes(1)
-        expect(definition.b.default).toHaveBeenCalledWith(options)
       })
 
       it('throws error if no default command and command from name space not found', () => {
         expect(() => {
-          commandFinder(next)({
-            definition,
-            options: {},
-            params: ['f', 'arg1', 'arg2']
-          })
-        }).toThrow(CLICommandNotFound)
+          commandFinder(next)({ ...args, params: ['f', 'arg1', 'arg2'] })
+        }).toThrow(CLIError)
       })
     })
   })
 
   describe('when function as definition given', () => {
     beforeEach(() => {
-      definition = jest.fn()
+      args.definition = jest.fn()
     })
 
     it('calls command', () => {
-      commandFinder(next)({ options: {}, params: [], definition })
-      expect(definition).toHaveBeenCalledTimes(1)
-      expect(definition).toHaveBeenCalledWith({})
+      commandFinder(next)(args)
+      expect(next).toHaveBeenCalledWith({
+        ...args,
+        command: args.definition
+      })
     })
 
     it('calls command with params', () => {
-      commandFinder(next)({ options: {}, params: ['a', 'b'], definition })
-      expect(definition).toHaveBeenCalledTimes(1)
-      expect(definition).toHaveBeenCalledWith({}, 'a', 'b')
+      commandFinder(next)({ ...args, params: ['a', 'b'] })
+      expect(next).toHaveBeenCalledWith({
+        ...args,
+        command: args.definition,
+        params: ['a', 'b']
+      })
     })
 
     it('calls command with options', () => {
       const options = { op1: 'o1', op2: 'o2' }
-      commandFinder(next)({ options, params: [], definition })
-      expect(definition).toHaveBeenCalledTimes(1)
-      expect(definition).toHaveBeenCalledWith(options)
+      commandFinder(next)({ ...args, options })
+      expect(next).toHaveBeenCalledWith({
+        ...args,
+        command: args.definition,
+        options
+      })
     })
   })
 })
