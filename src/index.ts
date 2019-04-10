@@ -1,3 +1,5 @@
+import { argsParser, errorsHandler } from './middlewares'
+import { Logger } from './utils/logger'
 import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
 
 export { help } from './middlewares/helper'
@@ -27,7 +29,7 @@ export class CLIError extends Error {}
 
 export function cli(
   definition: CommandsModule,
-  middlewares: Middleware[] = []
+  middlewares: Middleware[] = [errorsHandler(new Logger()), argsParser]
 ) {
   middleware<IMiddlewareArguments>(middlewares)({
     command: () => null,
