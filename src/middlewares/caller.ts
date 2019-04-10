@@ -64,17 +64,13 @@ export function getCommandParams(
   return params.slice(1)
 }
 
-export const caller: Middleware = next => ({
-  options,
-  params,
-  commandsModule
-}) => {
-  const command = findCommand(commandsModule, params)
-  const commandParams = getCommandParams(commandsModule, params)
+export const caller: Middleware = next => args => {
+  const command = findCommand(args.commandsModule, args.params)
+  const commandParams = getCommandParams(args.commandsModule, args.params)
 
   if (command) {
-    command(options, ...commandParams)
-    return next({ options, params, commandsModule })
+    command(args.options, ...commandParams)
+    return next(args)
   }
 
   throw new CLICommandNotFound()
