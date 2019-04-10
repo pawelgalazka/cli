@@ -27,9 +27,15 @@ export interface IMiddlewareArguments {
 
 export class CLIError extends Error {}
 
+export function useMiddlewares(middlewares: Middleware[] = []) {
+  const defaultMiddlewares = [errorsHandler(new Logger()), argsParser]
+  const nextMiddlewares = defaultMiddlewares.concat(middlewares)
+  return nextMiddlewares
+}
+
 export function cli(
   definition: CommandsModule,
-  middlewares: Middleware[] = [errorsHandler(new Logger()), argsParser]
+  middlewares: Middleware[] = useMiddlewares()
 ) {
   middleware<IMiddlewareArguments>(middlewares)({
     command: () => null,
