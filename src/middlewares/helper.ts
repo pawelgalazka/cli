@@ -16,21 +16,15 @@ export interface IHelpDetailedAnnoations {
   [key: string]: any
 }
 
-interface IPrintCommandHelpArguments {
-  command: CommandFunction
-  logger: ILogger
-}
-
-interface IPrintNamespaceHelpArguments {
-  commands: ICommandsDictionary
-  logger: ILogger
-}
-
 export type HelpAnnotations = string | IHelpDetailedAnnoations
 
 const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
 
-function printCommandHelp({ command, logger }: IPrintCommandHelpArguments) {
+function printCommandHelp(
+  command: CommandFunction,
+  namespace: string,
+  logger: ILogger
+) {
   const help = annotationsMap.get(command)
   if (!help) {
     logger.log('Documentation not found')
@@ -70,18 +64,19 @@ function printCommandHelp({ command, logger }: IPrintCommandHelpArguments) {
   })
 }
 
-function printNamespaceHelp({
-  commands,
-  logger
-}: IPrintNamespaceHelpArguments) {
-  Object.keys(commands)
+function printDefinitionHelp(
+  definition: ICommandsDictionary,
+  namespace: string,
+  logger: ILogger
+) {
+  Object.keys(definition)
     .sort()
     .forEach(key => {
-      const node = commands[key]
+      const node = definition[key]
       const nextNamespace = namespace ? `${namespace}:${key}` : key
 
       if (typeof node === 'function') {
-        let annotations = node.help
+        let annotations = annotationsMap.get(node)
 
         if (typeof annotations === 'string') {
           annotations = { description: annotations }
@@ -105,7 +100,7 @@ function printNamespaceHelp({
         // Log
         logger.log(...logArgs)
       } else if (typeof node === 'object') {
-        printNamespaceHelp({ commands: node, logger })
+        printDefinitionHelp(node, nextNamespace, logger)
       }
     })
 }
@@ -120,18 +115,19 @@ export function help(command: CommandFunction, annotations: HelpAnnotations) {
   }
 }
 
-export const helper: (logger: ILogger) => Middleware = logger => next => ({
-  options,
-  params,
-  commandsModule
-}) => {
+export const helper: (
+  logger: ILogger
+) => Middleware = logger => next => args => {
+  const { definition, options, command, namespace } = args
   if (!options.help) {
-    return next({ options, params, commandsModule })
+    return next(args)
   }
 
-  if (typeof commandsModule === 'function') {
-    printCommandHelp({ command: commandsModule, logger })
-  } else {
-    printNamespaceHelp({ commands: commandsModule, logger })
+  if (command) {
+    printCommandHelp(command, namespace, logger)
+  }
+
+  if (namespace === '' && typeof definition === 'object') {
+    printDefinitionHelp(definition, namespace, logger)
   }
 }

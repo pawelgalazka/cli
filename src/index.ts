@@ -33,8 +33,9 @@ export interface IMiddlewareArguments {
 export class CLIError extends Error {}
 
 export function useMiddlewares(middlewares: Middleware[] = []) {
+  const logger = new Logger()
   const defaultMiddlewares = [
-    errorsHandler(new Logger()),
+    errorsHandler(logger),
     argsParser,
     commandFinder,
     commandCaller
