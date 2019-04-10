@@ -1,5 +1,3 @@
-import { CLICommandNotFound, CLIIllegalOption } from './utils/errors'
-import { Logger } from './utils/logger'
 import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
 
 export { help } from './middlewares/helper'
@@ -29,26 +27,14 @@ export interface IInterpreterArguments extends IMiddlewareArguments {
   middlewares?: Middleware[]
 }
 
+export class CLIError extends Error {}
+
 export function cli(definition: CommandsModule) {
-  const logger = new Logger()
-  try {
-    middleware<IMiddlewareArguments>([])({
-      command: () => null,
-      definition,
-      namespace: '',
-      options: {},
-      params: []
-    })
-  } catch (error) {
-    if (
-      error instanceof CLICommandNotFound ||
-      error instanceof CLIIllegalOption
-    ) {
-      logger.error(error.message)
-      process.exit(1)
-    } else {
-      logger.log(error)
-      process.exit(1)
-    }
-  }
+  middleware<IMiddlewareArguments>([])({
+    command: () => null,
+    definition,
+    namespace: '',
+    options: {},
+    params: []
+  })
 }
