@@ -23,14 +23,13 @@ export interface IMiddlewareArguments {
   command: CommandFunction
 }
 
-export interface IInterpreterArguments extends IMiddlewareArguments {
-  middlewares?: Middleware[]
-}
-
 export class CLIError extends Error {}
 
-export function cli(definition: CommandsModule) {
-  middleware<IMiddlewareArguments>([])({
+export function cli(
+  definition: CommandsModule,
+  middlewares: Middleware[] = []
+) {
+  middleware<IMiddlewareArguments>(middlewares)({
     command: () => null,
     definition,
     namespace: '',
