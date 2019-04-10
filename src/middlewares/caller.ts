@@ -1,11 +1,11 @@
 import { get } from 'lodash'
-import { CLICommandNotFound } from '../utils/errors'
 import {
   CLIParams,
   CommandFunction,
   CommandsModule,
   Middleware
 } from '../interpreter'
+import { CLICommandNotFound } from '../utils/errors'
 
 export function findCommand(
   commandsModule: CommandsModule,
