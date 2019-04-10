@@ -1,5 +1,3 @@
-import cliArgs from '@pawelgalazka/cli-args'
-
 import { CLICommandNotFound, CLIIllegalOption } from './utils/errors'
 import { Logger } from './utils/logger'
 import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
@@ -34,14 +32,12 @@ export interface IInterpreterArguments extends IMiddlewareArguments {
 export function cli(definition: CommandsModule) {
   const logger = new Logger()
   try {
-    const { params, options } = cliArgs(process.argv.slice(2))
-
     middleware<IMiddlewareArguments>([])({
       command: () => null,
       definition,
       namespace: '',
-      options,
-      params
+      options: {},
+      params: []
     })
   } catch (error) {
     if (
