@@ -1,21 +1,16 @@
 import { difference } from 'lodash'
 
-import { CommandFunction, ICLIOptions } from '../index'
-import { CLIIllegalOption } from '../utils/errors'
+import { CLIError, Middleware } from '../index'
 import { optionsToString } from '../utils/options'
+import { annotationsMap } from './helper'
 
-export interface IValidateArguments {
-  command: CommandFunction
-  options: ICLIOptions
-  namespace: string
-}
-
-export function validate({ command, options, namespace }: IValidateArguments) {
-  if (typeof command.help !== 'object') {
-    return
+export const validator: Middleware = next => args => {
+  const { options, command, namespace } = args
+  const annotations = annotationsMap.get(command)
+  if (typeof annotations !== 'object') {
+    return next(args)
   }
 
-  const annotations = command.help
   const annotatedOptionsKeys =
     (annotations && annotations.options && Object.keys(annotations.options)) ||
     []
@@ -27,6 +22,8 @@ export function validate({ command, options, namespace }: IValidateArguments) {
       `Illegal option: ${optionsToString(illegalOptionsKeys)}\n` +
       `Available options: ${optionsToString(annotatedOptionsKeys)}\n` +
       `Type "${namespace} --help" for more information`
-    throw new CLIIllegalOption(msg)
+    throw new CLIError(msg)
   }
+
+  return next(args)
 }
