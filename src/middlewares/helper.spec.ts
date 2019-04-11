@@ -1,19 +1,25 @@
 /* tslint:disable:no-empty */
 import chalk from 'chalk'
 
-import { printHelp } from '../../src/helper'
+import { help, helper } from './helper'
 
 describe('printHelp()', () => {
-  let module: any
   let logger: any
   let mockLogger: any
-  let namespace: string
+  let args: any
+  let next: jest.Mock
 
   beforeEach(() => {
-    // namespace = 'script.js'
-    module = {
-      a: () => {},
-      b: () => {}
+    next = jest.fn()
+    args = {
+      command: null,
+      definition: {
+        a: () => {},
+        b: () => {}
+      },
+      namespace: '',
+      options: { help: true },
+      params: []
     }
 
     mockLogger = jest.fn()
@@ -30,9 +36,9 @@ describe('printHelp()', () => {
     }
   })
 
-  describe('when node of commands given', () => {
+  describe('when definition as object with commands given', () => {
     it('should log list of methods', () => {
-      printHelp({ module, logger, namespace })
+      helper(logger)(next)(args)
       expect(mockLogger.mock.calls).toEqual([
         ['log', chalk.bold('a')],
         ['log', chalk.bold('b')]
@@ -40,10 +46,10 @@ describe('printHelp()', () => {
     })
 
     it('should log method descriptions', () => {
-      module.b = (arg1: any, arg2: any) => {}
-      module.a.help = 'Description for method a'
-      module.b.help = 'Description for method b'
-      printHelp({ module, logger, namespace })
+      args.definition.b = (arg1: any, arg2: any) => {}
+      help(args.definition.a, 'Description for method a')
+      help(args.definition.b, 'Description for method b')
+      helper(logger)(next)(args)
       expect(mockLogger.mock.calls).toEqual([
         [
           'log',
@@ -61,9 +67,12 @@ describe('printHelp()', () => {
     })
 
     it('should log only first line of method descriptions', () => {
-      module.a.help = 'Description for method a\nsecond line\nthird line'
-      module.b.help = 'Description for method b'
-      printHelp({ module, logger, namespace })
+      help(
+        args.definition.a,
+        'Description for method a\nsecond line\nthird line'
+      )
+      help(args.definition.b, 'Description for method b')
+      helper(logger)(next)(args)
       expect(mockLogger.mock.calls).toEqual([
         [
           'log',
@@ -81,7 +90,7 @@ describe('printHelp()', () => {
     })
 
     it('should log list of name spaced / nested methods', () => {
-      module.c = {
+      args.definition.c = {
         d: () => {},
         e: {
           f: () => {},
@@ -89,10 +98,9 @@ describe('printHelp()', () => {
         }
       }
 
-      module.c.help = 'Description for namespace c'
-      module.c.e.f.help = 'Description for method f'
+      help(args.definition.c.e.f, 'Description for method f')
 
-      printHelp({ module, logger, namespace })
+      helper(logger)(next)(args)
       expect(mockLogger.mock.calls).toEqual([
         ['log', chalk.bold('a')],
         ['log', chalk.bold('b')],
