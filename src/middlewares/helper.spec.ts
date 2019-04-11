@@ -1,15 +1,15 @@
 /* tslint:disable:no-empty */
 import chalk from 'chalk'
 
-import { help, helper } from './helper'
+import { annotationsMap, help, helper, IHelpDetailedAnnoations } from './helper'
 
 describe('helper()', () => {
   let logger: any
-  let mockLogger: any
   let args: any
   let next: jest.Mock
 
   beforeEach(() => {
+    annotationsMap.clear()
     next = jest.fn()
     args = {
       command: null,
@@ -22,17 +22,8 @@ describe('helper()', () => {
       params: []
     }
 
-    mockLogger = jest.fn()
     logger = {
-      error: (...args: any[]) => {
-        mockLogger('error', ...args)
-      },
-      log: (...args: any[]) => {
-        mockLogger('log', ...args)
-      },
-      warn: (...args: any[]) => {
-        mockLogger('warning', ...args)
-      }
+      log: jest.fn()
     }
   })
 
@@ -45,7 +36,7 @@ describe('helper()', () => {
 
     it('does not call the logger', () => {
       helper(logger)(next)(args)
-      expect(mockLogger).not.toHaveBeenCalled()
+      expect(logger.log).not.toHaveBeenCalled()
     })
   })
 
@@ -54,14 +45,77 @@ describe('helper()', () => {
       args.options = { help: true }
     })
 
-    describe('and command found', () => {
+    describe('and command and namespace found', () => {
       beforeEach(() => {
         args.command = () => null
+        args.namespace = 'commandName'
       })
 
-      it('does not call the next middleware', () => {
-        helper(logger)(next)(args)
-        expect(next).not.toHaveBeenCalled()
+      describe('without any annotations given', () => {
+        it('does not call the next middleware', () => {
+          helper(logger)(next)(args)
+          expect(next).not.toHaveBeenCalled()
+        })
+
+        it('logs info that there is no documentation', () => {
+          helper(logger)(next)(args)
+          expect(logger.log.mock.calls).toEqual([['Documentation not found']])
+        })
+      })
+
+      describe('with string annotation given', () => {
+        beforeEach(() => {
+          help(args.command, 'General script description')
+        })
+
+        it('prints basic help', () => {
+          helper(logger)(next)(args)
+          expect(logger.log.mock.calls).toEqual([
+            ['Usage: commandName  \n'],
+            ['General script description\n']
+          ])
+        })
+      })
+
+      describe('with detailed annotations given', () => {
+        let annotations: IHelpDetailedAnnoations
+        beforeEach(() => {
+          annotations = {
+            description: 'General script description',
+            options: {
+              a: 'description for a option',
+              foo: 'description for foo option'
+            },
+            params: ['abc', 'def']
+          }
+        })
+
+        it('prints basic help', () => {
+          help(args.command, annotations)
+          helper(logger)(next)(args)
+          expect(logger.log.mock.calls).toEqual([
+            ['Usage: commandName [options] [abc def]\n'],
+            ['General script description\n'],
+            ['Options:\n'],
+            ['  -a          description for a option'],
+            ['  --foo       description for foo option']
+          ])
+        })
+
+        it('prints custom section', () => {
+          annotations.examples = 'examples content'
+          help(args.command, annotations)
+          helper(logger)(next)(args)
+          expect(logger.log.mock.calls).toEqual([
+            ['Usage: commandName [options] [abc def]\n'],
+            ['General script description\n'],
+            ['Options:\n'],
+            ['  -a          description for a option'],
+            ['  --foo       description for foo option'],
+            ['\nExamples:\n'],
+            ['examples content\n']
+          ])
+        })
       })
     })
 
@@ -74,9 +128,9 @@ describe('helper()', () => {
 
         it('should log list of methods', () => {
           helper(logger)(next)(args)
-          expect(mockLogger.mock.calls).toEqual([
-            ['log', chalk.bold('a')],
-            ['log', chalk.bold('b')]
+          expect(logger.log.mock.calls).toEqual([
+            [chalk.bold('a')],
+            [chalk.bold('b')]
           ])
         })
       })
@@ -89,15 +143,13 @@ describe('helper()', () => {
 
         it('should log method descriptions', () => {
           helper(logger)(next)(args)
-          expect(mockLogger.mock.calls).toEqual([
+          expect(logger.log.mock.calls).toEqual([
             [
-              'log',
               chalk.bold('a') + '                              ',
               '-',
               'Description for method a'
             ],
             [
-              'log',
               chalk.bold('b') + '                              ',
               '-',
               'Description for method b'
@@ -112,15 +164,13 @@ describe('helper()', () => {
           )
           help(args.definition.b, 'Description for method b')
           helper(logger)(next)(args)
-          expect(mockLogger.mock.calls).toEqual([
+          expect(logger.log.mock.calls).toEqual([
             [
-              'log',
               chalk.bold('a') + '                              ',
               '-',
               'Description for method a'
             ],
             [
-              'log',
               chalk.bold('b') + '                              ',
               '-',
               'Description for method b'
@@ -143,17 +193,16 @@ describe('helper()', () => {
         it('should log list of name spaced / nested methods', () => {
           help(args.definition.c.e.f, 'Description for method f')
           helper(logger)(next)(args)
-          expect(mockLogger.mock.calls).toEqual([
-            ['log', chalk.bold('a')],
-            ['log', chalk.bold('b')],
-            ['log', chalk.bold('c:d')],
+          expect(logger.log.mock.calls).toEqual([
+            [chalk.bold('a')],
+            [chalk.bold('b')],
+            [chalk.bold('c:d')],
             [
-              'log',
               chalk.bold('c:e:f') + '                          ',
               '-',
               'Description for method f'
             ],
-            ['log', chalk.bold('c:e:g')]
+            [chalk.bold('c:e:g')]
           ])
         })
       })

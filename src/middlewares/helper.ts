@@ -18,7 +18,7 @@ export interface IHelpDetailedAnnoations {
 
 export type HelpAnnotations = string | IHelpDetailedAnnoations
 
-const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
+export const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
 
 function printCommandHelp(
   command: CommandFunction,
@@ -127,7 +127,11 @@ export const helper: (
     printCommandHelp(command, namespace, logger)
   }
 
-  if (namespace === '' && typeof definition === 'object') {
+  if (
+    namespace === '' &&
+    typeof definition === 'object' &&
+    (!command || command === definition.default)
+  ) {
     printDefinitionHelp(definition, namespace, logger)
   }
 }
