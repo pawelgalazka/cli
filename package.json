@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
+    "clean": "rm -rf ./lib",
     "build": "tsc",
     "lint": "tslint -c tslint.json 'src/*.ts' 'test/**/*.ts'",
     "test": "yarn run lint && yarn build && jest --coverage",
