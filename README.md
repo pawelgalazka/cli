@@ -120,25 +120,3 @@ Command 1
 $ script.js cmd2
 Command 2
 ```
-
-
-### Custom --help
-
-You can provide `help` function to `cli` call, which can generate
-custom help message, having annotations object:
-
-```js
-#!/usr/bin/env node
-const { cli } = require('@pawelgalazka/cli')
-const cliScript = cli(process.argv, {
-  /* some annotations */
-}, (scriptName, annotations, logger) => {
-  logger.log('Custom --help message') 
-});
-
-cliScript((options, p1, p2) => {
-    console.log('OPTIONS', options)
-    console.log('P1', p1)
-    console.log('P2', p2)
-})
-```
