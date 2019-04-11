@@ -1,4 +1,8 @@
 import {
+  middleware,
+  Middleware as GenericMiddleware
+} from '@pawelgalazka/middleware'
+import {
   argsParser,
   commandCaller,
   commandFinder,
@@ -7,7 +11,6 @@ import {
   validator
 } from './middlewares'
 import { Logger } from './utils/logger'
-import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
 
 export { help } from './middlewares/helper'
 
