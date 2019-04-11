@@ -100,7 +100,7 @@ describe('commandFinder()', () => {
         delete args.definition.default
         expect(() => {
           commandFinder(next)({ ...args, params: ['arg1', 'arg2'] })
-        }).toThrow(CLIError)
+        }).toThrow(new CLIError('Command not found'))
       })
     })
 
@@ -148,7 +148,7 @@ describe('commandFinder()', () => {
       it('throws error if no default command and command from name space not found', () => {
         expect(() => {
           commandFinder(next)({ ...args, params: ['f', 'arg1', 'arg2'] })
-        }).toThrow(CLIError)
+        }).toThrow(new CLIError('Command not found'))
       })
     })
   })
