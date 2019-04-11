@@ -66,87 +66,96 @@ describe('helper()', () => {
     })
 
     describe('and command not found and namespace is empty', () => {
-      it('does not call the next middleware', () => {
-        helper(logger)(next)(args)
-        expect(next).not.toHaveBeenCalled()
+      describe('and no descriptions for commands provided', () => {
+        it('does not call the next middleware', () => {
+          helper(logger)(next)(args)
+          expect(next).not.toHaveBeenCalled()
+        })
+
+        it('should log list of methods', () => {
+          helper(logger)(next)(args)
+          expect(mockLogger.mock.calls).toEqual([
+            ['log', chalk.bold('a')],
+            ['log', chalk.bold('b')]
+          ])
+        })
       })
 
-      it('should log list of methods', () => {
-        helper(logger)(next)(args)
-        expect(mockLogger.mock.calls).toEqual([
-          ['log', chalk.bold('a')],
-          ['log', chalk.bold('b')]
-        ])
+      describe('and descriptions for commands provided', () => {
+        beforeEach(() => {
+          help(args.definition.a, 'Description for method a')
+          help(args.definition.b, 'Description for method b')
+        })
+
+        it('should log method descriptions', () => {
+          helper(logger)(next)(args)
+          expect(mockLogger.mock.calls).toEqual([
+            [
+              'log',
+              chalk.bold('a') + '                              ',
+              '-',
+              'Description for method a'
+            ],
+            [
+              'log',
+              chalk.bold('b') + '                              ',
+              '-',
+              'Description for method b'
+            ]
+          ])
+        })
+
+        it('should log only first line of method descriptions', () => {
+          help(
+            args.definition.a,
+            'Description for method a\nsecond line\nthird line'
+          )
+          help(args.definition.b, 'Description for method b')
+          helper(logger)(next)(args)
+          expect(mockLogger.mock.calls).toEqual([
+            [
+              'log',
+              chalk.bold('a') + '                              ',
+              '-',
+              'Description for method a'
+            ],
+            [
+              'log',
+              chalk.bold('b') + '                              ',
+              '-',
+              'Description for method b'
+            ]
+          ])
+        })
       })
 
-      it('should log method descriptions', () => {
-        args.definition.b = (arg1: any, arg2: any) => {}
-        help(args.definition.a, 'Description for method a')
-        help(args.definition.b, 'Description for method b')
-        helper(logger)(next)(args)
-        expect(mockLogger.mock.calls).toEqual([
-          [
-            'log',
-            chalk.bold('a') + '                              ',
-            '-',
-            'Description for method a'
-          ],
-          [
-            'log',
-            chalk.bold('b') + '                              ',
-            '-',
-            'Description for method b'
-          ]
-        ])
-      })
-
-      it('should log only first line of method descriptions', () => {
-        help(
-          args.definition.a,
-          'Description for method a\nsecond line\nthird line'
-        )
-        help(args.definition.b, 'Description for method b')
-        helper(logger)(next)(args)
-        expect(mockLogger.mock.calls).toEqual([
-          [
-            'log',
-            chalk.bold('a') + '                              ',
-            '-',
-            'Description for method a'
-          ],
-          [
-            'log',
-            chalk.bold('b') + '                              ',
-            '-',
-            'Description for method b'
-          ]
-        ])
-      })
-
-      it('should log list of name spaced / nested methods', () => {
-        args.definition.c = {
-          d: () => {},
-          e: {
-            f: () => {},
-            g: () => {}
+      describe('and name spaced definition provided', () => {
+        beforeEach(() => {
+          args.definition.c = {
+            d: () => {},
+            e: {
+              f: () => {},
+              g: () => {}
+            }
           }
-        }
+        })
 
-        help(args.definition.c.e.f, 'Description for method f')
-
-        helper(logger)(next)(args)
-        expect(mockLogger.mock.calls).toEqual([
-          ['log', chalk.bold('a')],
-          ['log', chalk.bold('b')],
-          ['log', chalk.bold('c:d')],
-          [
-            'log',
-            chalk.bold('c:e:f') + '                          ',
-            '-',
-            'Description for method f'
-          ],
-          ['log', chalk.bold('c:e:g')]
-        ])
+        it('should log list of name spaced / nested methods', () => {
+          help(args.definition.c.e.f, 'Description for method f')
+          helper(logger)(next)(args)
+          expect(mockLogger.mock.calls).toEqual([
+            ['log', chalk.bold('a')],
+            ['log', chalk.bold('b')],
+            ['log', chalk.bold('c:d')],
+            [
+              'log',
+              chalk.bold('c:e:f') + '                          ',
+              '-',
+              'Description for method f'
+            ],
+            ['log', chalk.bold('c:e:g')]
+          ])
+        })
       })
     })
   })
