@@ -2,7 +2,8 @@ import {
   argsParser,
   commandCaller,
   commandFinder,
-  errorsHandler
+  errorsHandler,
+  helper
 } from './middlewares'
 import { Logger } from './utils/logger'
 import { middleware, Middleware as GenericMiddleware } from './utils/middleware'
@@ -38,6 +39,7 @@ export function useMiddlewares(middlewares: Middleware[] = []) {
     errorsHandler(logger),
     argsParser,
     commandFinder,
+    helper(logger),
     commandCaller
   ]
   const nextMiddlewares = defaultMiddlewares.concat(middlewares)
