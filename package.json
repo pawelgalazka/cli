@@ -12,7 +12,7 @@
     "test:e2e": "jest ./tests/e2e/*.e2e.spec.ts"
   },
   "lint-staged": {
-    "tmp/*.{ts,tsx}": [
+    "src/**/*.{ts,tsx}": [
       "tslint --fix",
       "git add",
       "jest --bail --findRelatedTests"
