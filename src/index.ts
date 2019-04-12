@@ -8,11 +8,13 @@ import {
   commandFinder,
   errorsHandler,
   helper,
+  rawArgsParser,
   validator
 } from './middlewares'
 import { Logger } from './utils/logger'
 
 export { help } from './middlewares/helper'
+export { rawArgs } from './middlewares/rawArgsParser'
 
 export type CommandFunction = (options: ICLIOptions, ...args: any[]) => any
 export type CLIParams = string[]
@@ -40,12 +42,14 @@ export class CLIError extends Error {}
 
 export function useMiddlewares(middlewares: Middleware[] = []) {
   const logger = new Logger()
+  const argv = process.argv
   const defaultMiddlewares = [
     errorsHandler(logger),
     argsParser,
     commandFinder,
     helper(logger),
     validator,
+    rawArgsParser(argv),
     commandCaller
   ]
   const nextMiddlewares = defaultMiddlewares.concat(middlewares)
