@@ -13,7 +13,7 @@ export function useMiddlewares(middlewares: Middleware[] = []) {
   const argv = process.argv
   return [
     errorsHandler(logger),
-    argsParser,
+    argsParser(argv),
     commandFinder,
     helper(logger),
     validator,
