@@ -33,6 +33,7 @@ export interface IMiddlewareArguments {
   definition: CommandsModule
   namespace: string
   command: CommandFunction
+  error: (error: Error) => void
 }
 
 export class CLIError extends Error {}
@@ -58,6 +59,9 @@ export function cli(
   middleware<IMiddlewareArguments>(middlewares)({
     command: () => null,
     definition,
+    error: error => {
+      throw error
+    },
     namespace: '',
     options: {},
     params: []

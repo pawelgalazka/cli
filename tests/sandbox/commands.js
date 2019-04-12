@@ -20,9 +20,10 @@ help(status, {
     foo: 'foo option'
   }
 })
-function status (options, p) {
+async function status (options, p) {
   console.log('OPTIONS', options)
   console.log('P', p)
+  throw new Error('abc')
 }
 
 help(branch, {

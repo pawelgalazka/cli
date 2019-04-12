@@ -4,15 +4,21 @@ import { ILogger } from '../utils/logger'
 export const errorsHandler: (
   logger: ILogger
 ) => Middleware = logger => next => args => {
-  try {
-    next(args)
-  } catch (error) {
-    if (error instanceof CLIError) {
-      logger.error(error.message)
+  const error = (e: Error) => {
+    if (e instanceof CLIError) {
+      logger.error(e.message)
       process.exit(1)
     } else {
-      logger.log(error)
+      logger.log(e)
       process.exit(1)
     }
+  }
+  try {
+    next({
+      ...args,
+      error
+    })
+  } catch (e) {
+    error(e)
   }
 }
