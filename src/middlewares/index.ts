@@ -8,8 +8,10 @@ import { helper } from './helper'
 import { rawArgsParser } from './rawArgsParser'
 import { validator } from './validator'
 
-export function useMiddlewares(middlewares: Middleware[] = []) {
-  const logger = new Logger()
+export function useMiddlewares(
+  middlewares: Middleware[] = [],
+  logger = new Logger()
+) {
   const argv = process.argv
   return [
     errorsHandler(logger),
