@@ -2,17 +2,9 @@ import {
   middleware,
   Middleware as GenericMiddleware
 } from '@pawelgalazka/middleware'
-import {
-  argsParser,
-  commandCaller,
-  commandFinder,
-  errorsHandler,
-  helper,
-  rawArgsParser,
-  validator
-} from './middlewares'
-import { Logger } from './utils/logger'
+import { useMiddlewares } from './middlewares'
 
+export { useMiddlewares } from './middlewares'
 export { help } from './middlewares/helper'
 export { rawArgs } from './middlewares/rawArgsParser'
 
@@ -39,22 +31,6 @@ export interface IMiddlewareArguments {
 }
 
 export class CLIError extends Error {}
-
-export function useMiddlewares(middlewares: Middleware[] = []) {
-  const logger = new Logger()
-  const argv = process.argv
-  const defaultMiddlewares = [
-    errorsHandler(logger),
-    argsParser,
-    commandFinder,
-    helper(logger),
-    validator,
-    rawArgsParser(argv),
-    commandCaller
-  ]
-  const nextMiddlewares = defaultMiddlewares.concat(middlewares)
-  return nextMiddlewares
-}
 
 export function cli(
   definition: CommandsModule,
