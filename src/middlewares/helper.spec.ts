@@ -129,6 +129,7 @@ describe('helper()', () => {
         it('should log list of methods', () => {
           helper(logger)(next)(args)
           expect(logger.log.mock.calls).toEqual([
+            ['\nCommands:\n'],
             [chalk.bold('a')],
             [chalk.bold('b')]
           ])
@@ -144,6 +145,7 @@ describe('helper()', () => {
         it('should log method descriptions', () => {
           helper(logger)(next)(args)
           expect(logger.log.mock.calls).toEqual([
+            ['\nCommands:\n'],
             [
               chalk.bold('a') + '                              ',
               '-',
@@ -165,6 +167,7 @@ describe('helper()', () => {
           help(args.definition.b, 'Description for method b')
           helper(logger)(next)(args)
           expect(logger.log.mock.calls).toEqual([
+            ['\nCommands:\n'],
             [
               chalk.bold('a') + '                              ',
               '-',
@@ -194,6 +197,7 @@ describe('helper()', () => {
           help(args.definition.c.e.f, 'Description for method f')
           helper(logger)(next)(args)
           expect(logger.log.mock.calls).toEqual([
+            ['\nCommands:\n'],
             [chalk.bold('a')],
             [chalk.bold('b')],
             [chalk.bold('c:d')],

@@ -69,6 +69,9 @@ function printDefinitionHelp(
   namespace: string,
   logger: ILogger
 ) {
+  if (!namespace) {
+    logger.log('\nCommands:\n')
+  }
   Object.keys(definition)
     .sort()
     .forEach(key => {
