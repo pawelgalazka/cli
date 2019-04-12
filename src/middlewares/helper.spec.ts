@@ -7,10 +7,12 @@ describe('helper()', () => {
   let logger: any
   let args: any
   let next: jest.Mock
+  let argv: string[]
 
   beforeEach(() => {
     annotationsMap.clear()
     next = jest.fn()
+    argv = ['./test/scriptName.js']
     args = {
       command: null,
       definition: {
@@ -29,13 +31,13 @@ describe('helper()', () => {
 
   describe('when help option not given', () => {
     it('calls the next middleware', () => {
-      helper(logger)(next)(args)
+      helper(logger, argv)(next)(args)
       expect(next).toHaveBeenCalledTimes(1)
       expect(next).toHaveBeenCalledWith(args)
     })
 
     it('does not call the logger', () => {
-      helper(logger)(next)(args)
+      helper(logger, argv)(next)(args)
       expect(logger.log).not.toHaveBeenCalled()
     })
   })
@@ -53,12 +55,12 @@ describe('helper()', () => {
 
       describe('without any annotations given', () => {
         it('does not call the next middleware', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
         })
 
         it('logs info that there is no documentation', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([['Documentation not found']])
         })
       })
@@ -69,7 +71,7 @@ describe('helper()', () => {
         })
 
         it('prints basic help', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['Usage: commandName  \n'],
             ['General script description\n']
@@ -92,7 +94,7 @@ describe('helper()', () => {
 
         it('prints basic help', () => {
           help(args.command, annotations)
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['Usage: commandName [options] [abc def]\n'],
             ['General script description\n'],
@@ -105,7 +107,7 @@ describe('helper()', () => {
         it('prints custom section', () => {
           annotations.examples = 'examples content'
           help(args.command, annotations)
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['Usage: commandName [options] [abc def]\n'],
             ['General script description\n'],
@@ -122,12 +124,12 @@ describe('helper()', () => {
     describe('and command not found and namespace is empty', () => {
       describe('and no descriptions for commands provided', () => {
         it('does not call the next middleware', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
         })
 
         it('should log list of methods', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
             [chalk.bold('a')],
@@ -143,7 +145,7 @@ describe('helper()', () => {
         })
 
         it('should log method descriptions', () => {
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
             [
@@ -165,7 +167,7 @@ describe('helper()', () => {
             'Description for method a\nsecond line\nthird line'
           )
           help(args.definition.b, 'Description for method b')
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
             [
@@ -195,7 +197,7 @@ describe('helper()', () => {
 
         it('should log list of name spaced / nested methods', () => {
           help(args.definition.c.e.f, 'Description for method f')
-          helper(logger)(next)(args)
+          helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
             [chalk.bold('a')],

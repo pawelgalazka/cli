@@ -119,7 +119,8 @@ export function help(command: CommandFunction, annotations: HelpAnnotations) {
 }
 
 export const helper: (
-  logger: ILogger
+  logger: ILogger,
+  argv: string[]
 ) => Middleware = logger => next => args => {
   const { definition, options, command, namespace } = args
   if (!options.help) {

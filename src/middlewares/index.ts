@@ -17,7 +17,7 @@ export function useMiddlewares(
     errorsHandler(logger),
     argsParser(argv),
     commandFinder,
-    helper(logger),
+    helper(logger, argv),
     validator,
     rawArgsParser(argv),
     ...middlewares,
