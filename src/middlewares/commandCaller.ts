@@ -6,7 +6,5 @@ export const commandCaller: Middleware = next => args => {
     .then(() => {
       next(args)
     })
-    .catch(error => {
-      reject(error)
-    })
+    .catch(reject)
 }
