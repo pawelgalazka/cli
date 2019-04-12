@@ -1,12 +1,12 @@
 import { Middleware } from '../index'
 
 export const commandCaller: Middleware = next => args => {
-  const { command, options, params, error } = args
+  const { command, options, params, reject } = args
   Promise.resolve(command(options, ...params))
     .then(() => {
       next(args)
     })
-    .catch(err => {
-      error(err)
+    .catch(error => {
+      reject(error)
     })
 }
