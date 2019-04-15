@@ -15,15 +15,16 @@ function main (options, p) {
 
 help(status, {
   description: 'Fake git status',
-  params: ['p'],
+  params: ['p1', 'p2'],
   options: {
-    foo: 'foo option'
+    a: 'description for a option',
+    foo: 'description for foo option'
   }
 })
-async function status (options, p) {
+async function status (options, p1, p2) {
   console.log('OPTIONS', options)
-  console.log('P', p)
-  throw new Error('abc')
+  console.log('P1', p1)
+  console.log('P2', p2)
 }
 
 help(branch, {

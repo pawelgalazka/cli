@@ -38,15 +38,23 @@ describe('cli', () => {
       scriptPath = './tests/sandbox/commands.js'
     })
 
-    it('handles script based on commands', () => {
+    it('executes command implementation', () => {
+      expect(execSync(`${scriptPath} status -a --foo=bar abc def`).toString())
+        .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }
+          P1 abc
+          P2 def\n`)
+    })
+
+    it('prints help', () => {
       expect(execSync(`${scriptPath} status --help`).toString())
-        .toEqual(dedent`Usage: status [options] [p]
+        .toEqual(dedent`Usage: status [options] [p1 p2]
   
           Fake git status
   
           Options:
   
-            --foo       foo option\n`)
+            -a          description for a option
+            --foo       description for foo option\n`)
     })
   })
 })
