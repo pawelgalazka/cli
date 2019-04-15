@@ -119,6 +119,8 @@ export function help(command: CommandFunction, annotations: HelpAnnotations) {
   } else {
     throw new Error('First help() argument must be a function')
   }
+
+  return command
 }
 
 export const helper: (logger: ILogger, argv: string[]) => Middleware = (
