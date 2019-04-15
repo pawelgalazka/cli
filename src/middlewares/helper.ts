@@ -80,6 +80,9 @@ function printDefinitionHelp(
         const annotations = annotationsMap.get(node)
 
         if (key === 'default') {
+          if (!namespace) {
+            return
+          }
           nextNamespace = namespace || key
         }
 

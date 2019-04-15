@@ -17,7 +17,8 @@ describe('helper()', () => {
       command: null,
       definition: {
         a: () => {},
-        b: () => {}
+        b: () => {},
+        default: () => {}
       },
       namespace: '',
       options: {},
