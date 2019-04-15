@@ -79,10 +79,14 @@ function printDefinitionHelp(
     .sort()
     .forEach(key => {
       const node = definition[key]
-      const nextNamespace = namespace ? `${namespace}:${key}` : key
+      let nextNamespace = namespace ? `${namespace}:${key}` : key
 
       if (typeof node === 'function') {
         let annotations = annotationsMap.get(node)
+
+        if (key === 'default') {
+          nextNamespace = namespace || key
+        }
 
         if (typeof annotations === 'string') {
           annotations = { description: annotations }

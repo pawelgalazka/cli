@@ -264,6 +264,7 @@ describe('helper()', () => {
             args.definition.c = {
               d: () => {},
               e: {
+                default: () => {},
                 f: () => {},
                 g: () => {}
               }
@@ -278,6 +279,7 @@ describe('helper()', () => {
               [chalk.bold('a')],
               [chalk.bold('b')],
               [chalk.bold('c:d')],
+              [chalk.bold('c:e')],
               [
                 chalk.bold('c:e:f') + '                          ',
                 '-',
