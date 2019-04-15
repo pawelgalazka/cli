@@ -70,7 +70,7 @@ describe('helper()', () => {
           help(args.command, 'General script description')
         })
 
-        it('prints basic help', () => {
+        it('logs basic help', () => {
           helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['Usage: commandName  \n'],
@@ -92,7 +92,7 @@ describe('helper()', () => {
           }
         })
 
-        it('prints basic help', () => {
+        it('logs basic help', () => {
           help(args.command, annotations)
           helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
@@ -104,7 +104,7 @@ describe('helper()', () => {
           ])
         })
 
-        it('prints custom section', () => {
+        it('logs custom section', () => {
           annotations.examples = 'examples content'
           help(args.command, annotations)
           helper(logger, argv)(next)(args)
@@ -122,13 +122,13 @@ describe('helper()', () => {
     })
 
     describe('and command not found and namespace is empty', () => {
-      describe('and no descriptions for commands provided', () => {
+      describe('without descriptions for commands provided', () => {
         it('does not call the next middleware', () => {
           helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
         })
 
-        it('should log list of methods', () => {
+        it('logs list of methods', () => {
           helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
@@ -138,13 +138,13 @@ describe('helper()', () => {
         })
       })
 
-      describe('and descriptions for commands provided', () => {
+      describe('with descriptions for commands provided', () => {
         beforeEach(() => {
           help(args.definition.a, 'Description for method a')
           help(args.definition.b, 'Description for method b')
         })
 
-        it('should log method descriptions', () => {
+        it('logs method descriptions', () => {
           helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
             ['\nCommands:\n'],
@@ -161,7 +161,7 @@ describe('helper()', () => {
           ])
         })
 
-        it('should log only first line of method descriptions', () => {
+        it('logs only first line of method descriptions', () => {
           help(
             args.definition.a,
             'Description for method a\nsecond line\nthird line'
@@ -184,7 +184,7 @@ describe('helper()', () => {
         })
       })
 
-      describe('and name spaced definition provided', () => {
+      describe('with name spaced definition provided', () => {
         beforeEach(() => {
           args.definition.c = {
             d: () => {},
@@ -195,7 +195,7 @@ describe('helper()', () => {
           }
         })
 
-        it('should log list of name spaced / nested methods', () => {
+        it('logs list of name spaced / nested methods', () => {
           help(args.definition.c.e.f, 'Description for method f')
           helper(logger, argv)(next)(args)
           expect(logger.log.mock.calls).toEqual([
