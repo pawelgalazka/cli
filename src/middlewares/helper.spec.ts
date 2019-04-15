@@ -1,7 +1,7 @@
 /* tslint:disable:no-empty */
 import chalk from 'chalk'
 
-import { annotationsMap, help, helper, IHelpDetailedAnnoations } from './helper'
+import { annotationsMap, help, helper, IHelpAnnotations } from './helper'
 
 describe('helper()', () => {
   let logger: any
@@ -84,10 +84,11 @@ describe('helper()', () => {
         })
 
         describe('with detailed annotations given', () => {
-          let annotations: IHelpDetailedAnnoations
+          let annotations: IHelpAnnotations
+          let description: string
           beforeEach(() => {
+            description = 'General script description'
             annotations = {
-              description: 'General script description',
               options: {
                 a: 'description for a option',
                 foo: 'description for foo option'
@@ -97,7 +98,7 @@ describe('helper()', () => {
           })
 
           it('logs basic help', () => {
-            help(args.command, annotations)
+            help(args.command, description, annotations)
             helper(logger, argv)(next)(args)
             expect(logger.log.mock.calls).toEqual([
               ['Usage: commandName [options] [abc def]\n'],
@@ -110,7 +111,7 @@ describe('helper()', () => {
 
           it('logs custom section', () => {
             annotations.examples = 'examples content'
-            help(args.command, annotations)
+            help(args.command, description, annotations)
             helper(logger, argv)(next)(args)
             expect(logger.log.mock.calls).toEqual([
               ['Usage: commandName [options] [abc def]\n'],
@@ -153,10 +154,11 @@ describe('helper()', () => {
         })
 
         describe('with detailed annotations given', () => {
-          let annotations: IHelpDetailedAnnoations
+          let annotations: IHelpAnnotations
+          let description: string
           beforeEach(() => {
+            description = 'General script description'
             annotations = {
-              description: 'General script description',
               options: {
                 a: 'description for a option',
                 foo: 'description for foo option'
@@ -166,7 +168,7 @@ describe('helper()', () => {
           })
 
           it('logs basic help', () => {
-            help(args.command, annotations)
+            help(args.command, description, annotations)
             helper(logger, argv)(next)(args)
             expect(logger.log.mock.calls).toEqual([
               ['Usage: scriptName.js [options] [abc def]\n'],
@@ -179,7 +181,7 @@ describe('helper()', () => {
 
           it('logs custom section', () => {
             annotations.examples = 'examples content'
-            help(args.command, annotations)
+            help(args.command, description, annotations)
             helper(logger, argv)(next)(args)
             expect(logger.log.mock.calls).toEqual([
               ['Usage: scriptName.js [options] [abc def]\n'],

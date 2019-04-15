@@ -10,14 +10,14 @@ export interface IOptionsAnnotations {
   [optionName: string]: string
 }
 
-export interface IHelpDetailedAnnoations {
-  description?: string
+export interface IHelpAnnotations {
   params?: string[]
   options?: IOptionsAnnotations
   [key: string]: any
 }
-
-export type HelpAnnotations = string | IHelpDetailedAnnoations
+export interface IHelpDetailedAnnoations extends IHelpAnnotations {
+  description?: string
+}
 
 export const annotationsMap = new Map<
   CommandFunction,
@@ -107,15 +107,22 @@ function printDefinitionHelp(
     })
 }
 
-export function help(command: CommandFunction, annotations: HelpAnnotations) {
+export function help(
+  command: CommandFunction,
+  description: string,
+  annotations: IHelpAnnotations = {}
+) {
   // Because the validation above currently gets compiled out,
   // Explictly  validate the function input
   if (typeof command !== 'function') {
-    throw new Error('First help() argument must be a function')
+    throw new TypeError('First help() argument must be a function')
   }
 
-  const nextAnnotations =
-    typeof annotations === 'string' ? { description: annotations } : annotations
+  if (typeof description !== 'string') {
+    throw new TypeError('Second help() argument must be a string')
+  }
+
+  const nextAnnotations = { ...annotations, description }
 
   annotationsMap.set(command, nextAnnotations)
 

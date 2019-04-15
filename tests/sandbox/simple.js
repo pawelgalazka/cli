@@ -7,8 +7,7 @@ cli(withHelp((options, p1, p2) => {
   console.log('OPTIONS', options)
   console.log('P1', p1)
   console.log('P2', p2)
-}, {
-  description: 'Basic script description',
+}, 'Basic script description', {
   params: ['p1', 'p2'],
   options: {
     a: 'description for a option',

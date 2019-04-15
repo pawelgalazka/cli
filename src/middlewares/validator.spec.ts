@@ -22,8 +22,7 @@ describe('validator()', () => {
 
   describe('when detailed annotations provided', () => {
     beforeEach(() => {
-      help(args.command, {
-        description: 'General script description',
+      help(args.command, 'General script description', {
         options: {
           a: 'description for a option',
           foo: 'description for foo option'
