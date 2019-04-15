@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import { execSync } from 'child_process'
 // tslint:disable-next-line:no-implicit-dependencies
 import dedent from 'dedent'
@@ -55,6 +56,27 @@ describe('cli', () => {
           P2 def\n`)
     })
 
+    it('fails on command with error', () => {
+      expect(() => {
+        execSync(`${scriptPath} errcmd`)
+      }).toThrow()
+    })
+
+    it('executes async command', () => {
+      expect(
+        execSync(`${scriptPath} asyncawaitcmd -a --foo=bar abc def`).toString()
+      ).toEqual(dedent`async/await command exec
+          OPTIONS { a: true, foo: 'bar' }
+          P1 abc
+          P2 def\n`)
+    })
+
+    it('fails on async command with error', () => {
+      expect(() => {
+        execSync(`${scriptPath} asyncawaiterrcmd`)
+      }).toThrow()
+    })
+
     it('prints help', () => {
       expect(execSync(`${scriptPath} simplecmd --help`).toString())
         .toEqual(dedent`Usage: simplecmd [options] [p1 p2]
@@ -65,6 +87,27 @@ describe('cli', () => {
 
           -a          description for a option
           --foo       description for foo option\n`)
+    })
+
+    it('prints help for default command', () => {
+      expect(execSync(`${scriptPath} --help`).toString())
+        .toEqual(dedent`Usage: commands.js [options] [p1 p2]
+
+      base command
+
+      Options:
+
+        -a          description for a option
+        --foo       description for foo option
+
+      Commands:
+
+      ${chalk.bold('asyncawaitcmd')}                   - Async/await command
+      ${chalk.bold(
+        'asyncawaiterrcmd'
+      )}                - Async/await error command
+      ${chalk.bold('errcmd')}                          - Error command
+      ${chalk.bold('simplecmd')} [p1 p2]               - Simple command\n`)
     })
   })
 })

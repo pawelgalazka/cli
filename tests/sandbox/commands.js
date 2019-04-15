@@ -44,9 +44,15 @@ async function asyncawaitcmd (options, p1, p2) {
   console.log('P2', p2)
 }
 
+help(asyncawaiterrcmd, 'Async/await error command')
+async function asyncawaiterrcmd () {
+  throw new Error('test error')
+}
+
 cli({
   default: main,
   simplecmd,
   errcmd,
-  asyncawaitcmd
+  asyncawaitcmd,
+  asyncawaiterrcmd
 })
