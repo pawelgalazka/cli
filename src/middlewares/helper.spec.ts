@@ -12,7 +12,7 @@ describe('helper()', () => {
   beforeEach(() => {
     annotationsMap.clear()
     next = jest.fn()
-    argv = ['./test/scriptName.js']
+    argv = ['node', './test/scriptName.js']
     args = {
       command: null,
       definition: {
@@ -50,73 +50,147 @@ describe('helper()', () => {
     describe('and command and namespace found', () => {
       beforeEach(() => {
         args.command = () => null
-        args.namespace = 'commandName'
       })
 
-      describe('without any annotation given', () => {
-        it('does not call the next middleware', () => {
-          helper(logger, argv)(next)(args)
-          expect(next).not.toHaveBeenCalled()
-        })
-
-        it('logs info that there is no documentation', () => {
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([['Documentation not found']])
-        })
-      })
-
-      describe('with string annotation given', () => {
+      describe('and namespace found', () => {
         beforeEach(() => {
-          help(args.command, 'General script description')
+          args.namespace = 'commandName'
         })
 
-        it('logs basic help', () => {
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['Usage: commandName  \n'],
-            ['General script description\n']
-          ])
+        describe('without any annotation given', () => {
+          it('does not call the next middleware', () => {
+            helper(logger, argv)(next)(args)
+            expect(next).not.toHaveBeenCalled()
+          })
+
+          it('logs info that there is no documentation', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([['Documentation not found']])
+          })
+        })
+
+        describe('with string annotation given', () => {
+          beforeEach(() => {
+            help(args.command, 'General script description')
+          })
+
+          it('logs basic help', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: commandName  \n'],
+              ['General script description\n']
+            ])
+          })
+        })
+
+        describe('with detailed annotations given', () => {
+          let annotations: IHelpDetailedAnnoations
+          beforeEach(() => {
+            annotations = {
+              description: 'General script description',
+              options: {
+                a: 'description for a option',
+                foo: 'description for foo option'
+              },
+              params: ['abc', 'def']
+            }
+          })
+
+          it('logs basic help', () => {
+            help(args.command, annotations)
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: commandName [options] [abc def]\n'],
+              ['General script description\n'],
+              ['Options:\n'],
+              ['  -a          description for a option'],
+              ['  --foo       description for foo option']
+            ])
+          })
+
+          it('logs custom section', () => {
+            annotations.examples = 'examples content'
+            help(args.command, annotations)
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: commandName [options] [abc def]\n'],
+              ['General script description\n'],
+              ['Options:\n'],
+              ['  -a          description for a option'],
+              ['  --foo       description for foo option'],
+              ['\nExamples:\n'],
+              ['examples content\n']
+            ])
+          })
         })
       })
 
-      describe('with detailed annotations given', () => {
-        let annotations: IHelpDetailedAnnoations
-        beforeEach(() => {
-          annotations = {
-            description: 'General script description',
-            options: {
-              a: 'description for a option',
-              foo: 'description for foo option'
-            },
-            params: ['abc', 'def']
-          }
+      describe('and namespace not found', () => {
+        describe('without any annotation given', () => {
+          it('does not call the next middleware', () => {
+            helper(logger, argv)(next)(args)
+            expect(next).not.toHaveBeenCalled()
+          })
+
+          it('logs info that there is no documentation', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([['Documentation not found']])
+          })
         })
 
-        it('logs basic help', () => {
-          help(args.command, annotations)
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['Usage: commandName [options] [abc def]\n'],
-            ['General script description\n'],
-            ['Options:\n'],
-            ['  -a          description for a option'],
-            ['  --foo       description for foo option']
-          ])
+        describe('with string annotation given', () => {
+          beforeEach(() => {
+            help(args.command, 'General script description')
+          })
+
+          it('logs basic help', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: scriptName.js  \n'],
+              ['General script description\n']
+            ])
+          })
         })
 
-        it('logs custom section', () => {
-          annotations.examples = 'examples content'
-          help(args.command, annotations)
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['Usage: commandName [options] [abc def]\n'],
-            ['General script description\n'],
-            ['Options:\n'],
-            ['  -a          description for a option'],
-            ['  --foo       description for foo option'],
-            ['\nExamples:\n'],
-            ['examples content\n']
-          ])
+        describe('with detailed annotations given', () => {
+          let annotations: IHelpDetailedAnnoations
+          beforeEach(() => {
+            annotations = {
+              description: 'General script description',
+              options: {
+                a: 'description for a option',
+                foo: 'description for foo option'
+              },
+              params: ['abc', 'def']
+            }
+          })
+
+          it('logs basic help', () => {
+            help(args.command, annotations)
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: scriptName.js [options] [abc def]\n'],
+              ['General script description\n'],
+              ['Options:\n'],
+              ['  -a          description for a option'],
+              ['  --foo       description for foo option']
+            ])
+          })
+
+          it('logs custom section', () => {
+            annotations.examples = 'examples content'
+            help(args.command, annotations)
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['Usage: scriptName.js [options] [abc def]\n'],
+              ['General script description\n'],
+              ['Options:\n'],
+              ['  -a          description for a option'],
+              ['  --foo       description for foo option'],
+              ['\nExamples:\n'],
+              ['examples content\n']
+            ])
+          })
         })
       })
     })
@@ -216,9 +290,18 @@ describe('helper()', () => {
       })
 
       describe('and namespace found', () => {
+        beforeEach(() => {
+          args.namespace = 'commandName'
+        })
+
         it('does not call the next middleware', () => {
           helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
+        })
+
+        it('does not call the logger', () => {
+          helper(logger, argv)(next)(args)
+          expect(logger.log).not.toHaveBeenCalled()
         })
       })
     })

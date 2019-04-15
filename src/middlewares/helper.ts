@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import { capitalize, forEach, isEmpty, omit, padEnd } from 'lodash'
+import { basename } from 'path'
 
 import { CommandFunction, ICommandsDictionary, Middleware } from '../index'
 import { ILogger } from '../utils/logger'
@@ -23,7 +24,8 @@ export const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
 function printCommandHelp(
   command: CommandFunction,
   namespace: string,
-  logger: ILogger
+  logger: ILogger,
+  argv: string[]
 ) {
   const help = annotationsMap.get(command)
   if (!help) {
@@ -40,12 +42,13 @@ function printCommandHelp(
   }
 
   const { description, params, options } = annotations
+  const scriptName = namespace || basename(argv[1])
   const extra = omit(annotations, ['description', 'params', 'options'])
   const usageOptions = isEmpty(options) ? '' : '[options]'
   const usageParams =
     !Array.isArray(params) || isEmpty(params) ? '' : `[${params.join(' ')}]`
 
-  logger.log(`Usage: ${namespace} ${usageOptions} ${usageParams}\n`)
+  logger.log(`Usage: ${scriptName} ${usageOptions} ${usageParams}\n`)
 
   if (description) {
     logger.log(`${description}\n`)
@@ -118,17 +121,17 @@ export function help(command: CommandFunction, annotations: HelpAnnotations) {
   }
 }
 
-export const helper: (
-  logger: ILogger,
-  argv: string[]
-) => Middleware = logger => next => args => {
+export const helper: (logger: ILogger, argv: string[]) => Middleware = (
+  logger,
+  argv
+) => next => args => {
   const { definition, options, command, namespace } = args
   if (!options.help) {
     return next(args)
   }
 
   if (command) {
-    printCommandHelp(command, namespace, logger)
+    printCommandHelp(command, namespace, logger, argv)
   }
 
   if (
