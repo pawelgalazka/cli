@@ -47,7 +47,7 @@ describe('helper()', () => {
       args.options = { help: true }
     })
 
-    describe('and command and namespace found', () => {
+    describe('and command found', () => {
       beforeEach(() => {
         args.command = () => null
       })
