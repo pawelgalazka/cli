@@ -40,28 +40,31 @@ describe('cli', () => {
 
     it('executes default command implementation', () => {
       expect(execSync(`${scriptPath} -a --foo=bar abc def`).toString())
-        .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }
+        .toEqual(dedent`default command exec
+        OPTIONS { a: true, foo: 'bar' }
         P1 abc
         P2 def\n`)
     })
 
     it('executes command implementation', () => {
-      expect(execSync(`${scriptPath} status -a --foo=bar abc def`).toString())
-        .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }
+      expect(
+        execSync(`${scriptPath} simplecmd -a --foo=bar abc def`).toString()
+      ).toEqual(dedent`simple command exec
+          OPTIONS { a: true, foo: 'bar' }
           P1 abc
           P2 def\n`)
     })
 
     it('prints help', () => {
-      expect(execSync(`${scriptPath} status --help`).toString())
-        .toEqual(dedent`Usage: status [options] [p1 p2]
+      expect(execSync(`${scriptPath} simplecmd --help`).toString())
+        .toEqual(dedent`Usage: simplecmd [options] [p1 p2]
   
-          Fake git status
+        Simple command
   
-          Options:
-  
-            -a          description for a option
-            --foo       description for foo option\n`)
+        Options:
+
+          -a          description for a option
+          --foo       description for foo option\n`)
     })
   })
 })

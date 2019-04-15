@@ -9,38 +9,44 @@ help(main, 'base command', {
   }
 })
 function main (options, p1, p2) {
+  console.log('default command exec')
   console.log('OPTIONS', options)
   console.log('P1', p1)
   console.log('P2', p2)
 }
 
-help(status, 'Fake git status', {
+help(simplecmd, 'Simple command', {
   params: ['p1', 'p2'],
   options: {
     a: 'description for a option',
     foo: 'description for foo option'
   }
 })
-async function status (options, p1, p2) {
+async function simplecmd (options, p1, p2) {
+  console.log('simple command exec')
   console.log('OPTIONS', options)
   console.log('P1', p1)
   console.log('P2', p2)
 }
 
-help(branch, 'Fake git branch', {
-  params: ['p'],
-  options: {
-    foo: 'foo option'
-  }
-})
-function branch (options, p1, p2) {
+help(errcmd, 'Error command')
+function errcmd () {
+  throw new Error('test error')
+}
+
+help(asyncawaitcmd, 'Async/await command')
+async function asyncawaitcmd (options, p1, p2) {
+  console.log('async/await command exec')
   console.log('OPTIONS', options)
-  console.log('P1', p1)
+  await Promise.resolve().then(() => {
+    console.log('P1', p1)
+  })
   console.log('P2', p2)
 }
 
 cli({
   default: main,
-  status,
-  branch
+  simplecmd,
+  errcmd,
+  asyncawaitcmd
 })
