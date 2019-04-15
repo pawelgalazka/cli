@@ -38,6 +38,13 @@ describe('cli', () => {
       scriptPath = './tests/sandbox/commands.js'
     })
 
+    it('executes default command implementation', () => {
+      expect(execSync(`${scriptPath} -a --foo=bar abc def`).toString())
+        .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }
+        P1 abc
+        P2 def\n`)
+    })
+
     it('executes command implementation', () => {
       expect(execSync(`${scriptPath} status -a --foo=bar abc def`).toString())
         .toEqual(dedent`OPTIONS { a: true, foo: 'bar' }

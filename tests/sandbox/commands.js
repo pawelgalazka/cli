@@ -2,14 +2,16 @@
 const { cli, help } = require('../../lib/index')
 
 help(main, 'base command', {
-  params: ['p'],
+  params: ['p1', 'p2'],
   options: {
-    foo: 'foo option'
+    a: 'description for a option',
+    foo: 'description for foo option'
   }
 })
-function main (options, p) {
+function main (options, p1, p2) {
   console.log('OPTIONS', options)
-  console.log('P', p)
+  console.log('P1', p1)
+  console.log('P2', p2)
 }
 
 help(status, 'Fake git status', {
@@ -31,9 +33,10 @@ help(branch, 'Fake git branch', {
     foo: 'foo option'
   }
 })
-function branch (options, p) {
+function branch (options, p1, p2) {
   console.log('OPTIONS', options)
-  console.log('P', p)
+  console.log('P1', p1)
+  console.log('P2', p2)
 }
 
 cli({
