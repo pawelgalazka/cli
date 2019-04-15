@@ -53,7 +53,7 @@ describe('helper()', () => {
         args.namespace = 'commandName'
       })
 
-      describe('without any annotations given', () => {
+      describe('without any annotation given', () => {
         it('does not call the next middleware', () => {
           helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
@@ -122,7 +122,7 @@ describe('helper()', () => {
     })
 
     describe('and command not found and namespace is empty', () => {
-      describe('without descriptions for commands provided', () => {
+      describe('without annotations for commands given', () => {
         it('does not call the next middleware', () => {
           helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
@@ -138,7 +138,7 @@ describe('helper()', () => {
         })
       })
 
-      describe('with descriptions for commands provided', () => {
+      describe('with string annotations for commands given', () => {
         beforeEach(() => {
           help(args.definition.a, 'Description for method a')
           help(args.definition.b, 'Description for method b')
@@ -184,7 +184,7 @@ describe('helper()', () => {
         })
       })
 
-      describe('with name spaced definition provided', () => {
+      describe('with namespaced definition given', () => {
         beforeEach(() => {
           args.definition.c = {
             d: () => {},
