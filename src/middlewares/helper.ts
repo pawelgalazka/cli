@@ -19,7 +19,10 @@ export interface IHelpDetailedAnnoations {
 
 export type HelpAnnotations = string | IHelpDetailedAnnoations
 
-export const annotationsMap = new Map<CommandFunction, HelpAnnotations>()
+export const annotationsMap = new Map<
+  CommandFunction,
+  IHelpDetailedAnnoations
+>()
 
 function printCommandHelp(
   command: CommandFunction,
@@ -27,18 +30,10 @@ function printCommandHelp(
   logger: ILogger,
   argv: string[]
 ) {
-  const help = annotationsMap.get(command)
-  if (!help) {
+  const annotations = annotationsMap.get(command)
+  if (!annotations) {
     logger.log('Documentation not found')
     return
-  }
-
-  let annotations: IHelpDetailedAnnoations = {}
-
-  if (typeof help === 'string') {
-    annotations.description = help
-  } else {
-    annotations = help
   }
 
   const { description, params, options } = annotations
@@ -82,15 +77,12 @@ function printDefinitionHelp(
       let nextNamespace = namespace ? `${namespace}:${key}` : key
 
       if (typeof node === 'function') {
-        let annotations = annotationsMap.get(node)
+        const annotations = annotationsMap.get(node)
 
         if (key === 'default') {
           nextNamespace = namespace || key
         }
 
-        if (typeof annotations === 'string') {
-          annotations = { description: annotations }
-        }
         // Add task name
         const funcParams = annotations && annotations.params
         const logArgs = [chalk.bold(nextNamespace)]
@@ -118,11 +110,14 @@ function printDefinitionHelp(
 export function help(command: CommandFunction, annotations: HelpAnnotations) {
   // Because the validation above currently gets compiled out,
   // Explictly  validate the function input
-  if (typeof command === 'function') {
-    annotationsMap.set(command, annotations)
-  } else {
+  if (typeof command !== 'function') {
     throw new Error('First help() argument must be a function')
   }
+
+  const nextAnnotations =
+    typeof annotations === 'string' ? { description: annotations } : annotations
+
+  annotationsMap.set(command, nextAnnotations)
 
   return command
 }
