@@ -90,8 +90,11 @@ describe('cli', () => {
     })
 
     it('prints help for default command', () => {
-      expect(execSync(`${scriptPath} --help`).toString())
-        .toEqual(dedent`Usage: commands.js [options] [p1 p2]
+      expect(
+        execSync(`${scriptPath} --help`, {
+          env: { ...process.env, FORCE_COLOR: '0' }
+        }).toString()
+      ).toEqual(dedent`Usage: commands.js [options] [p1 p2]
 
       base command
 
@@ -102,12 +105,10 @@ describe('cli', () => {
 
       Commands:
 
-      ${chalk.bold('asyncawaitcmd')}                   - Async/await command
-      ${chalk.bold(
-        'asyncawaiterrcmd'
-      )}                - Async/await error command
-      ${chalk.bold('errcmd')}                          - Error command
-      ${chalk.bold('simplecmd')} [p1 p2]               - Simple command\n`)
+      asyncawaitcmd                            - Async/await command
+      asyncawaiterrcmd                         - Async/await error command
+      errcmd                                   - Error command
+      simplecmd [p1 p2]                        - Simple command\n`)
     })
   })
 })
