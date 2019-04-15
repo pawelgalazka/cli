@@ -121,95 +121,104 @@ describe('helper()', () => {
       })
     })
 
-    describe('and command not found and namespace is empty', () => {
-      describe('without annotations for commands given', () => {
+    describe('and command not found', () => {
+      describe('and namespace is empty', () => {
+        describe('without annotations for commands given', () => {
+          it('does not call the next middleware', () => {
+            helper(logger, argv)(next)(args)
+            expect(next).not.toHaveBeenCalled()
+          })
+
+          it('logs list of methods', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['\nCommands:\n'],
+              [chalk.bold('a')],
+              [chalk.bold('b')]
+            ])
+          })
+        })
+
+        describe('with string annotations for commands given', () => {
+          beforeEach(() => {
+            help(args.definition.a, 'Description for method a')
+            help(args.definition.b, 'Description for method b')
+          })
+
+          it('logs method descriptions', () => {
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['\nCommands:\n'],
+              [
+                chalk.bold('a') + '                              ',
+                '-',
+                'Description for method a'
+              ],
+              [
+                chalk.bold('b') + '                              ',
+                '-',
+                'Description for method b'
+              ]
+            ])
+          })
+
+          it('logs only first line of method descriptions', () => {
+            help(
+              args.definition.a,
+              'Description for method a\nsecond line\nthird line'
+            )
+            help(args.definition.b, 'Description for method b')
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['\nCommands:\n'],
+              [
+                chalk.bold('a') + '                              ',
+                '-',
+                'Description for method a'
+              ],
+              [
+                chalk.bold('b') + '                              ',
+                '-',
+                'Description for method b'
+              ]
+            ])
+          })
+        })
+
+        describe('with namespaced definition given', () => {
+          beforeEach(() => {
+            args.definition.c = {
+              d: () => {},
+              e: {
+                f: () => {},
+                g: () => {}
+              }
+            }
+          })
+
+          it('logs list of name spaced / nested methods', () => {
+            help(args.definition.c.e.f, 'Description for method f')
+            helper(logger, argv)(next)(args)
+            expect(logger.log.mock.calls).toEqual([
+              ['\nCommands:\n'],
+              [chalk.bold('a')],
+              [chalk.bold('b')],
+              [chalk.bold('c:d')],
+              [
+                chalk.bold('c:e:f') + '                          ',
+                '-',
+                'Description for method f'
+              ],
+              [chalk.bold('c:e:g')]
+            ])
+          })
+        })
+      })
+
+      describe('and namespace found', () => {
         it('does not call the next middleware', () => {
           helper(logger, argv)(next)(args)
           expect(next).not.toHaveBeenCalled()
-        })
-
-        it('logs list of methods', () => {
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['\nCommands:\n'],
-            [chalk.bold('a')],
-            [chalk.bold('b')]
-          ])
-        })
-      })
-
-      describe('with string annotations for commands given', () => {
-        beforeEach(() => {
-          help(args.definition.a, 'Description for method a')
-          help(args.definition.b, 'Description for method b')
-        })
-
-        it('logs method descriptions', () => {
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['\nCommands:\n'],
-            [
-              chalk.bold('a') + '                              ',
-              '-',
-              'Description for method a'
-            ],
-            [
-              chalk.bold('b') + '                              ',
-              '-',
-              'Description for method b'
-            ]
-          ])
-        })
-
-        it('logs only first line of method descriptions', () => {
-          help(
-            args.definition.a,
-            'Description for method a\nsecond line\nthird line'
-          )
-          help(args.definition.b, 'Description for method b')
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['\nCommands:\n'],
-            [
-              chalk.bold('a') + '                              ',
-              '-',
-              'Description for method a'
-            ],
-            [
-              chalk.bold('b') + '                              ',
-              '-',
-              'Description for method b'
-            ]
-          ])
-        })
-      })
-
-      describe('with namespaced definition given', () => {
-        beforeEach(() => {
-          args.definition.c = {
-            d: () => {},
-            e: {
-              f: () => {},
-              g: () => {}
-            }
-          }
-        })
-
-        it('logs list of name spaced / nested methods', () => {
-          help(args.definition.c.e.f, 'Description for method f')
-          helper(logger, argv)(next)(args)
-          expect(logger.log.mock.calls).toEqual([
-            ['\nCommands:\n'],
-            [chalk.bold('a')],
-            [chalk.bold('b')],
-            [chalk.bold('c:d')],
-            [
-              chalk.bold('c:e:f') + '                          ',
-              '-',
-              'Description for method f'
-            ],
-            [chalk.bold('c:e:g')]
-          ])
         })
       })
     })
