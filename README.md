@@ -59,19 +59,23 @@ about options and params:
 
 ```js
 #!/usr/bin/env node
-const { cli, withHelp } = require('@pawelgalazka/cli')
+const { cli, help } = require('@pawelgalazka/cli')
 
-cli(withHelp((options, name = '', surname = '') => {
+function command(options, name = '', surname = '') {
   console.log(`Hello ${name} ${surname}!`)
   if (options.yay) {
     console.log('YAY!')
-  }
-}, 'Script description', {
+  }  
+}
+
+help(command, 'Script description', {
   options: {
     yay: 'print yay'
   },
   params: ['name', 'surname']
-}))
+})
+
+cli(command)
 ```
 
 ```sh
