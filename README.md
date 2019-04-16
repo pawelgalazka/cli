@@ -84,3 +84,31 @@ Options:
 
   --yay       print yay
 ```
+
+## Add commands
+
+```js
+const { cli, help } = require('@pawelgalazka/cli')
+
+help(cmd1, 'Description of first command')
+
+function cmd1(options) {
+  console.log('First command')
+}
+
+help(cmd2, 'Description of second command')
+
+function cmd2(options) {
+  console.log('Second command')
+}
+
+cli({
+  cmd1,
+  cmd2
+})
+```
+
+```sh
+$ ./yourScript.js cmd1
+First command
+```
