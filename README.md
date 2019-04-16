@@ -106,16 +106,24 @@ function cmd2(options) {
   console.log('Second command')
 }
 
+help(defaultCmd, 'Description of default command')
+function defaultCmd(options) {
+  console.log('Default command')
+}
+
 cli({
   cmd1,
-  cmd2
+  cmd2,
+  default: defaultCmd
 })
 ```
 
 ```sh
 $ ./yourScript.js cmd1
 First command
+$ ./yourScript.js
+Default command
 ```
 
-Mutlicommand version of cli can as well accept `option` and params which
-will be passed to proper function.
+Mutlicommand version of cli can as well accept `options` and params which
+will be passed to proper function. `--help` generation is handled too.
