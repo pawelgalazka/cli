@@ -127,3 +127,27 @@ Default command
 
 Mutlicommand version of cli can as well accept `options` and params which
 will be passed to proper function. `--help` generation is handled too.
+
+## Add middleware
+
+You can customise behaviour of `cli` framework by middleware system:
+
+## Use TypeScript
+
+`cli` has support for `TypeScript`. `TS` types are included within the
+library, so you can write your scripts fully in `TypeScript` with usage
+of `ts-node`:
+
+```sh
+$ npm install ts-node --save-dev
+```
+
+`yourScript.ts`:
+```ts
+#!/usr/bin/env node
+import { cli } from '@pawelgalazka/cli'
+
+cli((options, name = '', surname = '') => {
+  console.log(`Hello ${name} ${surname}!`)
+})
+```
