@@ -5,8 +5,8 @@ Functions based CLI framework
 
 ```sh
 $ npm install @pawelgalazka/cli --save
-$ touch yourScript.js # add your script file
-$ chmod a+x ./yourScripts # add execute permissions
+$ touch yourScript.js                    # add your script file
+$ chmod a+x ./yourScripts                # add execute permissions
 ```
 
 `yourScript.js`:
@@ -16,12 +16,19 @@ const { cli } = require('@pawelgalazka/cli')
 
 cli((options, name = '', surname = '') => {
   console.log(`Hello ${name} ${surname}!`)
-  console.log('Options:', options)
+  if (options.yay) {
+    console.log('YAY!)
+  }
 })
 ```
 
 ```sh
-$ ./yourScript.js Pawel Galazka --someOption
+$ ./yourScript.js Pawel Galazka
 Hello Pawel Galazka!
-Options: { someOption: true }
+```
+
+```sh
+$ ./yourScript.js Pawel Galazka --yay
+Hello Pawel Galazka!
+YAY!
 ```
