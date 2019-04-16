@@ -130,7 +130,31 @@ will be passed to proper function. `--help` generation is handled too.
 
 ## Add middleware
 
-You can customise behaviour of `cli` framework by middleware system:
+You can customise behaviour of `cli` framework by middleware system. `cli`
+itself is build on chain of middlewares.
+
+To add custom middleware:
+
+```js
+#!/usr/bin/env node
+const { cli, useMiddlewares } = require('@pawelgalazka/cli')
+
+const customMiddleware = next => ({ 
+    options, 
+    params, 
+    definition, 
+    namespace, 
+    reject 
+  }) => {
+
+  // Run next middleware
+  next({ options, params, definition, namespace, reject })
+}
+
+cli((options, name = '', surname = '') => {
+  console.log(`Hello ${name} ${surname}!`)
+}, useMiddlewares([customMiddleware]))
+```
 
 ## Use TypeScript
 
