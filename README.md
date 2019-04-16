@@ -32,3 +32,25 @@ $ ./yourScript.js Pawel Galazka --yay
 Hello Pawel Galazka!
 YAY!
 ```
+
+## Add help
+
+`yourScript.js`:
+```js
+#!/usr/bin/env node
+const { cli, withHelp } = require('@pawelgalazka/cli')
+
+cli(withHelp((options, name = '', surname = '') => {
+  console.log(`Hello ${name} ${surname}!`)
+  if (options.yay) {
+    console.log('YAY!')
+  }
+}, 'Script description'))
+```
+
+```sh
+$ ./yourScript.js --help
+Usage: simple.js
+
+Script description
+```
