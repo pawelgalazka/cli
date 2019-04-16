@@ -6,7 +6,7 @@ Functions based CLI framework
 ```sh
 $ npm install @pawelgalazka/cli --save
 $ touch yourScript.js                    # add your script file
-$ chmod a+x ./yourScripts                # add execute permissions
+$ chmod a+x ./yourScript.js              # add execute permissions
 ```
 
 `yourScript.js`:
