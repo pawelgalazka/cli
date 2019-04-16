@@ -143,17 +143,22 @@ const customMiddleware = next => ({
     options, 
     params, 
     definition, 
-    namespace, 
-    reject 
+    namespace
   }) => {
 
+  const nextParams = params.map(param => param.toUpperCase())
   // Run next middleware
-  next({ options, params, definition, namespace, reject })
+  next({ options, params: nextParams, definition, namespace })
 }
 
 cli((options, name = '', surname = '') => {
   console.log(`Hello ${name} ${surname}!`)
 }, useMiddlewares([customMiddleware]))
+```
+
+```sh
+$ ./yourScript.js Pawel Galazka
+Hello PAWEL GALAZKA!
 ```
 
 ## Use TypeScript
