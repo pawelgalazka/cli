@@ -49,7 +49,7 @@ cli(withHelp((options, name = '', surname = '') => {
 
 ```sh
 $ ./yourScript.js --help
-Usage: simple.js
+Usage: yourScript.js
 
 Script description
 ```
@@ -80,7 +80,7 @@ cli(command)
 
 ```sh
 $ ./yourScript.js --help
-Usage: simple.js [options] [name surname]
+Usage: yourScript.js [options] [name surname]
 
 Script description
 
