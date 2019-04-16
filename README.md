@@ -180,6 +180,7 @@ with default middlewares, which looks like this:
 So custom middlewares gets called right before calling command functions. You
 can totally customise the chain by not using `useMiddlewares`. You can provide array
 of middlewares directly to `cli` as a second argument, instead of `useMiddlewares` call.
+By this default chain of middlewares will get overwritten.
 
 ## Use TypeScript
 
