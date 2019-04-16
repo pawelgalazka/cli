@@ -5,6 +5,8 @@ Functions based CLI framework
 
 ```sh
 $ npm install @pawelgalazka/cli --save
+$ touch yourScript.js # add your script file
+$ chmod a+x ./yourScripts # add execute permissions
 ```
 
 `yourScript.js`:
@@ -19,7 +21,6 @@ cli((options, name = '', surname = '') => {
 ```
 
 ```sh
-$ chmod a+x ./yourScripts # add execute permissions
 $ ./yourScript.js Pawel Galazka --someOption
 Hello Pawel Galazka!
 Options: { someOption: true }
