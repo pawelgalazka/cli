@@ -116,3 +116,6 @@ cli({
 $ ./yourScript.js cmd1
 First command
 ```
+
+Mutlicommand version of cli can as well accept `option` and params which
+will be passed to proper function.
