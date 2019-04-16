@@ -132,6 +132,8 @@ export function help(
   return command
 }
 
+export const withHelp = help
+
 export const helper: (logger: ILogger, argv: string[]) => Middleware = (
   logger,
   argv

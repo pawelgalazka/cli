@@ -5,7 +5,7 @@ import {
 import { useMiddlewares } from './middlewares'
 
 export { useMiddlewares } from './middlewares'
-export { help } from './middlewares/helper'
+export { help, withHelp } from './middlewares/helper'
 export { rawArgs } from './middlewares/rawArgsParser'
 
 export type CommandFunction = (options: ICLIOptions, ...args: any[]) => any
