@@ -4,6 +4,7 @@ Functions based CLI framework
 - [Quick start](#quick-start)
 - [Add help](#add-help)
 - [Add commands](#add-commands)
+- [Add namespaces](#add-namespaces)
 - [Add middleware](#add-middleware)
 - [Use TypeScript](#use-typescript)
 
@@ -133,6 +134,64 @@ Default command
 
 Mutlicommand version of cli can as well accept `options` and params which
 will be passed to proper function. `--help` generation is handled too.
+
+## Add namespaces
+
+To better organise commands, it is possible to group them in namespaces:
+
+```js
+const test = {
+  unit (options) {
+    console.log('Doing unit testing!')
+  }
+
+  e2e (options) {
+    console.log('Doing e2e testing!')
+  }
+}
+
+cli({
+  test
+})
+```
+
+```sh
+$ ./yourScript.js test:unit
+Doing unit testing!
+```
+
+Because namespace is just an object with functions, namespace 
+can be created also from a module:
+
+`./commands/test.js`:
+```javascript
+function unit () {
+  console.log('Doing unit testing!')
+}
+
+function e2e () {
+  console.log('Doing e2e testing!')
+}
+
+module.exports = {
+  unit,
+  integration
+}
+```
+
+`./yourScript.js`
+```js
+const test = require('./commands/test')
+
+cli({
+  test
+})
+```
+
+```bash
+$ ./yourScript.js test:unit
+Doing unit testing!
+```
 
 ## Add middleware
 
