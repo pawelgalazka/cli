@@ -12,12 +12,15 @@ $ npm install @pawelgalazka/cli --save
 #!/usr/bin/env node
 const { cli } = require('@pawelgalazka/cli')
 
-cli(() => {
-  console.log('Hello !')
+cli((options, name = '', surname = '') => {
+  console.log(`Hello ${name} ${surname}!`)
+  console.log('Options:', options)
 })
 ```
 
 ```sh
-chmod a+x ./yourScripts # add execute permissions
-./yourScript.js
+$ chmod a+x ./yourScripts # add execute permissions
+$ ./yourScript.js Pawel Galazka --someOption
+Hello Pawel Galazka!
+Options: { someOption: true }
 ```
