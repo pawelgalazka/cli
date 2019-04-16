@@ -3,6 +3,7 @@ Functions based CLI framework
 
 - [Quick start](#quick-start)
 - [Add help](#add-help)
+- [Add commands](#add-commands)
 - [Add middleware](#add-middleware)
 - [Use TypeScript](#use-typescript)
 
