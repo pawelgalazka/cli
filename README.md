@@ -206,14 +206,15 @@ const { cli, useMiddlewares } = require('@pawelgalazka/cli')
 
 const customMiddleware = next => ({ 
     options, 
-    params, 
+    params,
+    command,
     definition, 
     namespace
   }) => {
 
   const nextParams = params.map(param => param.toUpperCase())
   // Run next middleware
-  next({ options, params: nextParams, definition, namespace })
+  next({ options, params: nextParams, command, definition, namespace })
 }
 
 cli((options, name = '', surname = '') => {
