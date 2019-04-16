@@ -161,6 +161,26 @@ $ ./yourScript.js Pawel Galazka
 Hello PAWEL GALAZKA!
 ```
 
+What `useMiddlewares` does, it takes your middleware and puts it on the chain
+with default middlewares, which looks like this:
+
+```js
+[
+    errorsHandler(logger),
+    argsParser(argv),
+    commandFinder,
+    helper(logger, argv),
+    validator,
+    rawArgsParser(argv),
+    ...middlewares, // here goes your middlewares
+    commandCaller
+]
+```
+
+So custom middlewares gets called right before calling command functions. You
+can totally customise the chain by not using `useMiddlewares`. You can provide array
+of middlewares directly to `cli` as a second argument, instead of `useMiddlewares` call.
+
 ## Use TypeScript
 
 `cli` has support for `TypeScript`. `TS` types are included within the
