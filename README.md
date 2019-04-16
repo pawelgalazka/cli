@@ -35,7 +35,6 @@ YAY!
 
 ## Add help
 
-`yourScript.js`:
 ```js
 #!/usr/bin/env node
 const { cli, withHelp } = require('@pawelgalazka/cli')
@@ -53,4 +52,35 @@ $ ./yourScript.js --help
 Usage: simple.js
 
 Script description
+```
+
+You can also add more detailed `help` which will print out info
+about options and params:
+
+```js
+#!/usr/bin/env node
+const { cli, withHelp } = require('@pawelgalazka/cli')
+
+cli(withHelp((options, name = '', surname = '') => {
+  console.log(`Hello ${name} ${surname}!`)
+  if (options.yay) {
+    console.log('YAY!')
+  }
+}, 'Script description', {
+  options: {
+    yay: 'print yay'
+  },
+  params: ['name', 'surname']
+}))
+```
+
+```sh
+$ ./yourScript.js --help
+Usage: simple.js [options] [name surname]
+
+Script description
+
+Options:
+
+  --yay       print yay
 ```
