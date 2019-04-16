@@ -17,7 +17,7 @@ const { cli } = require('@pawelgalazka/cli')
 cli((options, name = '', surname = '') => {
   console.log(`Hello ${name} ${surname}!`)
   if (options.yay) {
-    console.log('YAY!)
+    console.log('YAY!')
   }
 })
 ```
