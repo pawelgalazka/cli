@@ -227,7 +227,7 @@ $ ./yourScript.js Pawel Galazka
 Hello PAWEL GALAZKA!
 ```
 
-What `useMiddlewares` does, it takes your middleware and puts it on the chain
+What `useMiddlewares` does, it takes your middleware and puts it within the chain
 with default middlewares, which looks like this:
 
 ```js
@@ -243,8 +243,8 @@ with default middlewares, which looks like this:
 ]
 ```
 
-So custom middlewares gets called right before calling command functions. You
-can totally customise the chain by not using `useMiddlewares`. You can provide array
+So custom middlewares gets called right before calling command function. You
+can totally customise the chain by not using `useMiddlewares`. You can provide an array
 of middlewares directly to `cli` as a second argument, instead of `useMiddlewares` call.
 By this default chain of middlewares will get overwritten.
 
