@@ -6,6 +6,9 @@ import { annotationsMap } from './helper'
 
 export const validator: Middleware = next => args => {
   const { options, command, namespace } = args
+  if (!command) {
+    return next(args)
+  }
   const annotations = annotationsMap.get(command)
   if (typeof annotations !== 'object') {
     return next(args)
