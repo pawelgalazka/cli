@@ -82,6 +82,12 @@ describe('cli', () => {
           P2 def\n`)
     })
 
+    it('throws "Command not found" error if command not found', () => {
+      expect(() =>
+        execSync(`${scriptPath} nested -a --foo=bar abc def`).toString()
+      ).toThrow('Command not found')
+    })
+
     it('fails on async command with error', () => {
       expect(() => {
         execSync(`${scriptPath} asyncawaiterrcmd`)
