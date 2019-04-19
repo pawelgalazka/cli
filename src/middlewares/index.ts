@@ -21,6 +21,6 @@ export function useMiddlewares(
     validator,
     rawArgsParser(argv),
     ...middlewares,
-    commandCaller
+    commandCaller(argv)
   ]
 }

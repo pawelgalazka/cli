@@ -84,7 +84,9 @@ describe('cli', () => {
 
     it('throws "Command not found" error if command not found', () => {
       expect(() =>
-        execSync(`${scriptPath} nested -a --foo=bar abc def`).toString()
+        execSync(`${scriptPath} nested -a --foo=bar abc def`, {
+          stdio: 'pipe'
+        }).toString()
       ).toThrow('Command not found')
     })
 
