@@ -49,10 +49,21 @@ async function asyncawaiterrcmd () {
   throw new Error('test error')
 }
 
+const nested = {
+  simplecmd(options, p1, p2) {
+    console.log('nested command exec')
+    console.log('OPTIONS', options)
+    console.log('P1', p1)
+    console.log('P2', p2)
+  }
+}
+help(nested.simplecmd, 'Nested command')
+
 cli({
   default: main,
   simplecmd,
   errcmd,
   asyncawaitcmd,
-  asyncawaiterrcmd
+  asyncawaiterrcmd,
+  nested
 })

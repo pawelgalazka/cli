@@ -71,6 +71,17 @@ describe('cli', () => {
           P2 def\n`)
     })
 
+    it('executes nested command', () => {
+      expect(
+        execSync(
+          `${scriptPath} nested:simplecmd -a --foo=bar abc def`
+        ).toString()
+      ).toEqual(dedent`nested command exec
+          OPTIONS { a: true, foo: 'bar' }
+          P1 abc
+          P2 def\n`)
+    })
+
     it('fails on async command with error', () => {
       expect(() => {
         execSync(`${scriptPath} asyncawaiterrcmd`)
@@ -108,6 +119,7 @@ describe('cli', () => {
       asyncawaitcmd                            - Async/await command
       asyncawaiterrcmd                         - Async/await error command
       errcmd                                   - Error command
+      nested:simplecmd                         - Nested command
       simplecmd [p1 p2]                        - Simple command\n`)
     })
   })
