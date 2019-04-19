@@ -1,6 +1,6 @@
 import { get } from 'lodash'
 
-import { CLIError, CommandsModule, Middleware } from '../index'
+import { CommandsModule, Middleware } from '../index'
 
 export const commandFinder: Middleware = next => args => {
   const { definition, params } = args
@@ -41,5 +41,8 @@ export const commandFinder: Middleware = next => args => {
     }
   }
 
-  throw new CLIError('Command not found')
+  return next({
+    ...args,
+    command: undefined
+  })
 }

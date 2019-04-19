@@ -96,11 +96,14 @@ describe('commandFinder()', () => {
         })
       })
 
-      it('throws error if no default command and command not found', () => {
+      it('calls next middleware with command undefined if default command and command not found', () => {
         delete args.definition.default
-        expect(() => {
-          commandFinder(next)({ ...args, params: ['arg1', 'arg2'] })
-        }).toThrow(new CLIError('Command not found'))
+        commandFinder(next)({ ...args, params: ['arg1', 'arg2'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: undefined,
+          params: ['arg1', 'arg2']
+        })
       })
     })
 
@@ -145,10 +148,13 @@ describe('commandFinder()', () => {
         })
       })
 
-      it('throws error if no default command and command from name space not found', () => {
-        expect(() => {
-          commandFinder(next)({ ...args, params: ['f', 'arg1', 'arg2'] })
-        }).toThrow(new CLIError('Command not found'))
+      it('calls next middleware with command undefined if default command and command from namespace not found', () => {
+        commandFinder(next)({ ...args, params: ['f', 'arg1', 'arg2'] })
+        expect(next).toHaveBeenCalledWith({
+          ...args,
+          command: undefined,
+          params: ['f', 'arg1', 'arg2']
+        })
       })
     })
   })
