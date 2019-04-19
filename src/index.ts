@@ -26,7 +26,7 @@ export interface IMiddlewareArguments {
   params: CLIParams
   definition: CommandsModule
   namespace: string
-  command: CommandFunction
+  command?: CommandFunction
   reject: (error: Error) => void
 }
 
@@ -37,7 +37,6 @@ export function cli(
   middlewares: Middleware[] = useMiddlewares()
 ) {
   middleware<IMiddlewareArguments>(middlewares)({
-    command: () => null,
     definition,
     namespace: '',
     options: {},
