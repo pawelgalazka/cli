@@ -10,7 +10,9 @@
     "lint": "tslint -c tslint.json 'src/*.ts' 'test/**/*.ts'",
     "test": "yarn run lint && yarn build && jest --coverage",
     "test:unit": "jest ./tests/unit/*.spec.ts",
-    "test:e2e": "jest ./tests/e2e/*.e2e.spec.ts"
+    "test:e2e": "jest ./tests/e2e/*.e2e.spec.ts",
+    "sandbox:simple": "./tests/sandbox/simple.js",
+    "sandbox:e2e": "./tests/sandbox/commands.js"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
