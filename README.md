@@ -260,7 +260,7 @@ $ npm install ts-node --save-dev
 
 `yourScript.ts`:
 ```ts
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 import { cli } from '@pawelgalazka/cli'
 
 cli((options, name = '', surname = '') => {
