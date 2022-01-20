@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import { capitalize, forEach, isEmpty, omit, padEnd } from 'lodash'
+import { capitalize, forEach, isEmpty, omit, padEnd, reduce } from 'lodash'
 import { basename } from 'path'
 
 import { CommandFunction, ICommandsDictionary, Middleware } from '../index'
@@ -51,8 +51,12 @@ function printCommandHelp(
 
   if (!isEmpty(options)) {
     logger.log('Options:\n')
+    const padLength = Math.max(
+      12,
+      reduce(options, (max, _, k) => Math.max(max, k.length), 0) + 3
+    )
     forEach(options, (value, key) => {
-      logger.log(`  ${padEnd(optionToString(key), 12)}${value}`)
+      logger.log(`  ${padEnd(optionToString(key), padLength)}${value}`)
     })
   }
 
